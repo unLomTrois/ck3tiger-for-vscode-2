@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { getDiagnosticCollection } from "./collection";
-import { log } from "./logger";
+import { log, revealLog } from "./logger";
 import { ErrorEntry, TigerLocation } from "./types";
 
 export function generateProblems(log_data: ErrorEntry[]) {
@@ -24,9 +24,9 @@ type DiagnosticsByFile = { [filePath: string]: vscode.Diagnostic[] };
 function handleProblems(problems: ErrorEntry[]): DiagnosticsByFile {
     const diagnosticsByFile: DiagnosticsByFile = {};
 
-    problems.forEach((problem) => {
+    for (const problem of problems) {
         handleProblem(problem, diagnosticsByFile);
-    });
+    }
 
     return diagnosticsByFile;
 }
@@ -61,6 +61,7 @@ function handleProblem(
         vscode.window.showErrorMessage(
             "Something went wrong while generating diagnostics"
         );
+        revealLog();
     }
 }
 
@@ -88,7 +89,9 @@ function handleLocation(
 function setRange(location: TigerLocation): vscode.Range {
     // if error is for the whole file (like encoding errors, match the whole first line)
     if (location.linenr === null || location.column === null) {
-        return new vscode.Range(0, 0, 0, 0);
+        // Returning a default range of (0, 0) to (0, 1) to indicate an unspecified location.
+        // This helps distinguish it from a genuine empty range.
+        return new vscode.Range(0, 0, 0, 1);
     }
 
     const start = new vscode.Position(location.linenr - 1, location.column - 1);
