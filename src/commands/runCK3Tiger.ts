@@ -1,8 +1,12 @@
 import * as vscode from "vscode";
-import cp from "child_process";
 import path from "path";
+import util from "node:util";
+import cp from "node:child_process";
+
 import { checkConfiguration, getPaths } from "../configuration";
 import { generateProblems } from "../generateProblems";
+
+const exec = util.promisify(cp.exec);
 
 export function runCK3TigerCommand(context: vscode.ExtensionContext) {
     const disposable = vscode.commands.registerCommand(
@@ -20,11 +24,11 @@ async function runCK3TigerWithProgress() {
             title: "ck3tiger",
             cancellable: false,
         },
-        handleTigerProgress 
+        handleTigerProgress
     );
 }
 
-async function handleTigerProgress (
+async function handleTigerProgress(
     progress: vscode.Progress<{
         message?: string;
         increment?: number;
@@ -68,87 +72,16 @@ async function runCK3Tiger(
     modPath: string,
     logPath: string
 ) {
-    await new Promise((resolve, reject) => {
-        cp.exec(
-            `"${tigerPath}" --ck3 "${ck3Path}" --json "${modPath}" > "${logPath}"`,
-            (err, stdout) => {
-                if (err) {
-                    reject(err);
-                }
-                resolve(stdout);
-            }
-        );
-    });
+    const command = `"${tigerPath}" --ck3 "${ck3Path}" --json "${modPath}" > "${logPath}"`;
+    try {
+        const { stdout, stderr } = await exec(command);
+        if (stderr) {
+            throw new Error(`Error running ck3tiger: ${stderr}`);
+        }
+    } catch (err: Error | any) {
+        throw new Error(`Failed to execute ck3tiger command: ${err.message}`);
+    }
 }
-
-// /**
-//  * @param {vscode.OutputChannel} logger
-//  */
-// function resetPathsCommand(logger) {
-//     return vscode.commands.registerCommand(
-//         "ck3tiger-for-vscode.resetPaths",
-//         async () => {
-//             await resetPaths(logger);
-//             await checkPaths(logger);
-//         }
-//     );
-// }
-
-// /**
-//  * @param {vscode.OutputChannel} logger
-//  * @param {vscode.DiagnosticCollection} diagnosticCollection
-//  */
-// function getProblemsFromLogCommand(logger, diagnosticCollection) {
-//     return vscode.commands.registerCommand(
-//         "ck3tiger-for-vscode.getProblemsFromLog",
-//         async () => {
-//             const { ck3tiger_path } = await checkPaths(logger);
-
-//             vscode.window.withProgress(
-//                 {
-//                     location: vscode.ProgressLocation.Window,
-//                     title: "ck3tiger",
-//                     cancellable: false,
-//                 },
-//                 async (progress) => {
-//                     progress.report({
-//                         message: "Loading tiger.json",
-//                     });
-
-//                     const log_path = path.join(
-//                         path.parse(ck3tiger_path).dir,
-//                         "tiger.json"
-//                     );
-
-//                     const log_uri = vscode.Uri.file(log_path);
-//                     try {
-//                         await vscode.workspace.fs.stat(log_uri);
-//                         vscode.window.showTextDocument(log_uri, {
-//                             viewColumn: vscode.ViewColumn.Beside,
-//                         });
-//                     } catch (e) {
-//                         vscode.window.showErrorMessage(
-//                             "tiger.json doesn't exist. Run ck3tiger first."
-//                         );
-//                         vscode.window.showInformationMessage(
-//                             "tiger.json must be in the same folder as ck3tiger binary"
-//                         );
-//                         return;
-//                     }
-
-//                     // read file:
-//                     const log_data = await readTigerLog(log_uri);
-
-//                     progress.report({
-//                         message: "Generating problems",
-//                     });
-
-//                     generateProblems(diagnosticCollection, log_data);
-//                 }
-//             );
-//         }
-//     );
-// }
 
 async function readTigerLog(log_path: string) {
     const log_uri = vscode.Uri.file(log_path);
