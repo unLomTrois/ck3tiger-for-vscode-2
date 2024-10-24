@@ -22,10 +22,10 @@ export function generateProblems(log_data: ErrorEntry[]) {
 type DiagnosticsByFile = { [filePath: string]: vscode.Diagnostic[] };
 
 function handleProblems(problems: ErrorEntry[]): DiagnosticsByFile {
-    let diagnosticsByFile: DiagnosticsByFile = {};
+    const diagnosticsByFile: DiagnosticsByFile = {};
 
     problems.forEach((problem) => {
-        const d = handleProblem(problem, diagnosticsByFile);
+        handleProblem(problem, diagnosticsByFile);
     });
 
     return diagnosticsByFile;
@@ -34,7 +34,7 @@ function handleProblems(problems: ErrorEntry[]): DiagnosticsByFile {
 function handleProblem(
     problem: ErrorEntry,
     diagnosticsByFile: DiagnosticsByFile
-): DiagnosticsByFile | undefined {
+): void {
     try {
         const location = problem.locations[0];
 
@@ -42,7 +42,6 @@ function handleProblem(
         if (problem.key === "colors") {
             console.log("Skipping problem with null line number");
             console.log(problem);
-
             return;
         }
 
@@ -56,15 +55,12 @@ function handleProblem(
         const diagnostic = handleLocation(problem, location);
 
         diagnosticsByFile[filePath].push(diagnostic);
-
-        return diagnosticsByFile;
     } catch (error) {
         log(error);
         log(JSON.stringify(problem));
         vscode.window.showErrorMessage(
             "Something went wrong while generating diagnostics"
         );
-        return;
     }
 }
 
@@ -108,28 +104,17 @@ function setRange(location: TigerLocation): vscode.Range {
 }
 
 function setSeverity(problem: ErrorEntry): vscode.DiagnosticSeverity {
-    let severity;
-
     switch (problem.severity) {
     case "tips":
-        severity = vscode.DiagnosticSeverity.Hint;
-        break;
+        return vscode.DiagnosticSeverity.Hint;
     case "untidy":
-        severity = vscode.DiagnosticSeverity.Information;
-        break;
+        return vscode.DiagnosticSeverity.Information;
     case "warning":
-        severity = vscode.DiagnosticSeverity.Warning;
-        break;
+        return vscode.DiagnosticSeverity.Warning;
     case "error":
-        severity = vscode.DiagnosticSeverity.Error;
-        break;
     case "fatal":
-        severity = vscode.DiagnosticSeverity.Error;
-        break;
+        return vscode.DiagnosticSeverity.Error;
     default:
-        severity = vscode.DiagnosticSeverity.Error;
-        break;
+        return vscode.DiagnosticSeverity.Error;
     }
-
-    return severity;
 }

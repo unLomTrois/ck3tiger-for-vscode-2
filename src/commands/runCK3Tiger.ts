@@ -16,6 +16,9 @@ export function runCK3TigerCommand(context: vscode.ExtensionContext) {
     context.subscriptions.push(disposable);
 }
 
+const getTigerLog = (tigerPath: string) =>
+    path.join(path.parse(tigerPath).dir, "tiger.json");
+
 async function runCK3TigerWithProgress() {
     vscode.window.withProgress(
         {
@@ -61,9 +64,6 @@ async function handleTigerProgress(
 
     generateProblems(logData);
 }
-
-const getTigerLog = (tigerPath: string) =>
-    path.join(path.parse(tigerPath).dir, "tiger.json");
 
 async function runCK3Tiger(
     tigerPath: string,
