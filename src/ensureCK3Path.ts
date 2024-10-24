@@ -6,7 +6,7 @@ import { log } from "./logger";
  * @param {vscode.WorkspaceConfiguration} config - The workspace configuration object.
  */
 export async function ensureCK3Path(config: vscode.WorkspaceConfiguration) {
-    const ck3path = config.get<string>("ck3path");
+    const ck3path = config.get<string>("ck3Path");
 
     if (ck3path) {
         return;
@@ -88,7 +88,7 @@ function getSelectedPath(
 async function updateCK3Path(config: vscode.WorkspaceConfiguration, ck3path: string) {
     log(`ck3path set to ${ck3path}`);
     try {
-        await config.update("ck3path", ck3path, vscode.ConfigurationTarget.Global);
+        await config.update("ck3Path", ck3path, vscode.ConfigurationTarget.Global);
     } catch (error: any) {
         log(`Failed to update ck3path: ${error.message || error}`);
         vscode.window.showErrorMessage(

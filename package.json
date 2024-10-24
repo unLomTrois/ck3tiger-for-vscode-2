@@ -16,10 +16,34 @@
   "contributes": {
     "commands": [
       {
-        "command": "ck3tiger-for-vscode-2.helloWorld",
-        "title": "Hello World"
+        "command": "ck3tiger-for-vscode-2.resetPaths",
+        "title": "ck3tiger: Reset Paths"
+      },
+      {
+        "command": "ck3tiger-for-vscode-2.getProblemsFromLog",
+        "title": "ck3tiger: Get problems from the log file (without running ck3tiger)"
       }
-    ]
+    ],
+    "configuration": {
+        "title": "ck3tiger configuration",
+        "properties": {
+            "ck3tiger.tigerPath": {
+            "scope": "application",
+            "type": "string",
+            "markdownDescription": "Specifies location of your ck3tiger instance"
+            },
+            "ck3tiger.ck3Path": {
+            "scope": "application",
+            "type": "string",
+            "description": "The location of a vanilla CK3 installation (like \"C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings III/game\""
+            },
+            "ck3tiger.modPath": {
+            "scope": "application",
+            "type": "string",
+            "description": "The location of your .mod file (like \"Like Documents/Paradox Interactive/Crusader Kings III/mod/<.mod file>\""
+            }
+        }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",

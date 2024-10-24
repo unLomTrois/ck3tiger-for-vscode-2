@@ -9,7 +9,7 @@ import { log } from "./logger";
 export async function ensureModPath(
     config: vscode.WorkspaceConfiguration
 ): Promise<void> {
-    const modPath = config.get<string>("ck3tiger.modPath");
+    const modPath = config.get<string>("modPath");
 
     if (modPath) {
         return;
@@ -32,7 +32,7 @@ export async function ensureModPath(
  */
 async function promptForModPath(): Promise<string | undefined> {
     const userSelection = await vscode.window.showInformationMessage(
-        "🐯 Let's find ck3path",
+        "🐯 Let's find your mod file",
         "Open",
         "Cancel"
     );
@@ -50,11 +50,11 @@ async function promptForModPath(): Promise<string | undefined> {
  */
 async function selectModPath(): Promise<string | undefined> {
     const folderUri = await vscode.window.showOpenDialog({
-        canSelectFiles: false,
-        canSelectFolders: true,
+        canSelectFiles: true,
+        canSelectFolders: false,
         canSelectMany: false,
+        openLabel: "Select your .mod file",
         title: "Select your .mod file",
-        openLabel: "Select CK3/game Folder",
         // todo: add a default path to documents/pdx/ck3/mod/ or /home/.local/share/pdx/ck3/mod/
     });
 
@@ -88,7 +88,7 @@ async function updateModPath(
     log(`ck3tiger.modPath was set to ${path}`);
     try {
         await config.update(
-            "ck3tiger.modPath",
+            "modPath",
             path,
             vscode.ConfigurationTarget.Global
         );

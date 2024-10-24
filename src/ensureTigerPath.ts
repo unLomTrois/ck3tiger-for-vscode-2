@@ -8,7 +8,7 @@ import { log } from "./logger";
 export async function ensureTigerPath(
     config: vscode.WorkspaceConfiguration
 ): Promise<void> {
-    const tigerPath = config.get<string>("ck3tiger.tigerPath");
+    const tigerPath = config.get<string>("tigerPath");
 
     if (tigerPath) {
         return;
@@ -17,7 +17,7 @@ export async function ensureTigerPath(
     const newPath = await promptForTigerPath();
 
     if (newPath) {
-        updateTigerPath(config, newPath);
+        await updateTigerPath(config, newPath);
     } else {
         vscode.window.showErrorMessage(
             "ck3tiger.tigerPath not found. Please manually set the ck3path in the extension settings or try again."
@@ -31,7 +31,7 @@ export async function ensureTigerPath(
  */
 async function promptForTigerPath(): Promise<string | undefined> {
     const userSelection = await vscode.window.showInformationMessage(
-        "🐯 Let's find ck3path",
+        "🐯 Let's find your ck3tiger binary!",
         "Open",
         "Cancel"
     );
@@ -77,7 +77,7 @@ async function updateTigerPath(
     try {
         log(`ck3tiger.tigerPath was set to ${path}`);
         await config.update(
-            "ck3tiger.tigerPath",
+            "tigerPath",
             path,
             vscode.ConfigurationTarget.Global
         );
