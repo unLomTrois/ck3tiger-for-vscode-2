@@ -1,8 +1,7 @@
 import * as vscode from "vscode";
 import path from "path";
-import util from "node:util";
-import cp from "node:child_process";
-
+import util from 'node:util';
+import cp from 'node:child_process';
 import { checkConfiguration, getPaths } from "../configuration";
 import { generateProblems } from "../generateProblems";
 
@@ -78,14 +77,20 @@ async function runCK3Tiger(
         if (stderr) {
             throw new Error(`Error running ck3tiger: ${stderr}`);
         }
-    } catch (err: Error | any) {
+    } catch (err: any) {
+        vscode.window.showErrorMessage(`Failed to execute ck3tiger command: ${err.message}`);
         throw new Error(`Failed to execute ck3tiger command: ${err.message}`);
     }
 }
 
 async function readTigerLog(log_path: string) {
-    const log_uri = vscode.Uri.file(log_path);
-    const log_file = await vscode.workspace.fs.readFile(log_uri);
-    const log_data = JSON.parse(Buffer.from(log_file).toString());
-    return log_data;
+    try {
+        const log_uri = vscode.Uri.file(log_path);
+        const log_file = await vscode.workspace.fs.readFile(log_uri);
+        const log_data = JSON.parse(Buffer.from(log_file).toString());
+        return log_data;
+    } catch (err: any) {
+        vscode.window.showErrorMessage(`Failed to read or parse tiger log file: ${err.message}`);
+        throw new Error(`Failed to read or parse tiger log file: ${err.message}`);
+    }
 }
