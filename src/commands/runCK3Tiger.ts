@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import path from "path";
 import cp from "node:child_process";
 import { checkConfiguration, getPaths } from "../config/configuration";
-import { generateProblems } from "../generateProblems";
+import { generateProblems } from "../diagnostics/generateProblems";
 
 export function runCK3TigerCommand(context: vscode.ExtensionContext) {
     const disposable = vscode.commands.registerCommand(

@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
-import { getDiagnosticCollection } from "./diagnostics/collection";
-import { log, revealLog } from "./logger";
-import { ErrorEntry, TigerLocation } from "./types";
+import { getDiagnosticCollection } from "./collection";
+import { log, revealLog } from "../logger";
+import { ErrorEntry, TigerLocation } from "../types";
 
 export function generateProblems(log_data: ErrorEntry[]) {
     const diagnosticCollection = getDiagnosticCollection();
