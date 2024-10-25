@@ -6,6 +6,7 @@
   "engines": {
     "vscode": "^1.93.0"
   },
+  "publisher": "unlomtrois",
   "author": {
     "name": "Vadim Kuznetsov",
     "url": "https://github.com/unLomTrois"
