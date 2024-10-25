@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { log } from "./logger";
+import { log } from "../logger";
 import { ensureCK3Path } from "./ensureCK3Path";
 import { ensureModPath } from "./ensureModPath";
 import { ensureTigerPath } from "./ensureTigerPath";

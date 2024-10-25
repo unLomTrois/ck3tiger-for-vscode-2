@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 
-import { checkConfiguration, resetPaths } from "../configuration";
+import { checkConfiguration, resetPaths } from "../config/configuration";
 
 export function resetPathsCommand(context: vscode.ExtensionContext): void {
     const disposable = vscode.commands.registerCommand(

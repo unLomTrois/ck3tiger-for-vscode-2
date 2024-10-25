@@ -3,7 +3,7 @@
 import * as vscode from "vscode";
 
 import { init as initLogger, log, revealLog } from "./logger";
-import { checkConfiguration } from "./configuration";
+import { checkConfiguration } from "./config/configuration";
 import { initStatusBarButton } from "./statusBar";
 import { runCK3TigerCommand } from "./commands/runCK3Tiger";
 import { resetPathsCommand } from "./commands/resetPaths";
