@@ -4,7 +4,7 @@ import { LogLevel } from "vscode";
 let logger: vscode.OutputChannel;
 
 export function init() {
-    logger = vscode.window.createOutputChannel("ck3tiger-for-vscode");
+    logger = vscode.window.createOutputChannel("ck3tiger-for-vscode-2");
 }
 const level: LogLevel = LogLevel.Debug;
 
