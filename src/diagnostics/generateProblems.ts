@@ -27,9 +27,9 @@ function handleProblems(problems: ErrorEntry[]): DiagnosticsByFile {
     for (const problem of problems) {
         // todo: add a configuration to select which problems to show
         // skip if it is weak
-        if (problem.confidence === "weak") {
-            continue;
-        }
+        // if (problem.confidence === "weak") {
+        //     continue;
+        // }
 
         handleProblem(problem, diagnosticsByFile);
     }
