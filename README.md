@@ -2,7 +2,7 @@
 
 <p align="center">
 	<a href="https://github.com/unLomTrois/ck3tiger-for-vscode-2/releases/latest">
-		<img src="https://img.shields.io/github/v/release/unLomTrois/ck3tiger-for-vscode" alt="GitHub Release">
+		<img src="https://img.shields.io/github/v/release/unLomTrois/ck3tiger-for-vscode-2" alt="GitHub Release">
 	</a>
 	<a href="https://github.com/dragon-archer/paradox-highlight/blob/main/LICENSE">
 		<img src="https://img.shields.io/github/license/unLomTrois/ck3tiger-for-vscode-2" alt="GitHub License">
