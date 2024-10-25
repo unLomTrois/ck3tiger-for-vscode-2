@@ -1,11 +1,8 @@
 import * as vscode from "vscode";
 import path from "path";
-import util from 'node:util';
-import cp from 'node:child_process';
+import cp from "node:child_process";
 import { checkConfiguration, getPaths } from "../configuration";
 import { generateProblems } from "../generateProblems";
-
-const exec = util.promisify(cp.exec);
 
 export function runCK3TigerCommand(context: vscode.ExtensionContext) {
     const disposable = vscode.commands.registerCommand(
@@ -72,15 +69,14 @@ async function runCK3Tiger(
     logPath: string
 ) {
     const command = `"${tigerPath}" --ck3 "${ck3Path}" --json "${modPath}" > "${logPath}"`;
-    try {
-        const { stdout, stderr } = await exec(command);
-        if (stderr) {
-            throw new Error(`Error running ck3tiger: ${stderr}`);
-        }
-    } catch (err: any) {
-        vscode.window.showErrorMessage(`Failed to execute ck3tiger command: ${err.message}`);
-        throw new Error(`Failed to execute ck3tiger command: ${err.message}`);
-    }
+    await new Promise((resolve, reject) => {
+        cp.exec(command, (err, stdout) => {
+            if (err) {
+                reject(err);
+            }
+            resolve(stdout);
+        });
+    });
 }
 
 async function readTigerLog(log_path: string) {
@@ -90,7 +86,11 @@ async function readTigerLog(log_path: string) {
         const log_data = JSON.parse(Buffer.from(log_file).toString());
         return log_data;
     } catch (err: any) {
-        vscode.window.showErrorMessage(`Failed to read or parse tiger log file: ${err.message}`);
-        throw new Error(`Failed to read or parse tiger log file: ${err.message}`);
+        vscode.window.showErrorMessage(
+            `Failed to read or parse tiger log file: ${err.message}`
+        );
+        throw new Error(
+            `Failed to read or parse tiger log file: ${err.message}`
+        );
     }
 }
