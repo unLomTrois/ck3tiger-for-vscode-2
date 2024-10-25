@@ -1,5 +1,14 @@
 # ck3-tiger for VS Code
 
+<p align="center">
+	<a href="https://github.com/unLomTrois/ck3tiger-for-vscode-2/releases/latest">
+		<img src="https://img.shields.io/github/v/release/unLomTrois/ck3tiger-for-vscode" alt="GitHub Release">
+	</a>
+	<a href="https://github.com/dragon-archer/paradox-highlight/blob/main/LICENSE">
+		<img src="https://img.shields.io/github/license/unLomTrois/ck3tiger-for-vscode-2" alt="GitHub License">
+	</a>
+</p>
+
 
 Are you tired of constantly dealing with the tedious process of *open error.log* -> *copy path to an error* -> *navigate to the path* -> *fix the error* -> *go back to the error log* -> *repeat*?
 
