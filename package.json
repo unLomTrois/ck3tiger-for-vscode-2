@@ -16,6 +16,10 @@
   "contributes": {
     "commands": [
       {
+        "command": "ck3tiger-for-vscode-2.runCk3tiger",
+        "title": "ck3tiger: Run ck3tiger"
+      },
+      {
         "command": "ck3tiger-for-vscode-2.resetPaths",
         "title": "ck3tiger: Reset Paths"
       },
@@ -25,24 +29,24 @@
       }
     ],
     "configuration": {
-        "title": "ck3tiger configuration",
-        "properties": {
-            "ck3tiger.tigerPath": {
-            "scope": "application",
-            "type": "string",
-            "markdownDescription": "Specifies location of your ck3tiger instance"
-            },
-            "ck3tiger.ck3Path": {
-            "scope": "application",
-            "type": "string",
-            "description": "The location of a vanilla CK3 installation (like \"C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings III/game\""
-            },
-            "ck3tiger.modPath": {
-            "scope": "application",
-            "type": "string",
-            "description": "The location of your .mod file (like \"Like Documents/Paradox Interactive/Crusader Kings III/mod/<.mod file>\""
-            }
+      "title": "ck3tiger configuration",
+      "properties": {
+        "ck3tiger.tigerPath": {
+          "scope": "application",
+          "type": "string",
+          "markdownDescription": "Specifies location of your ck3tiger instance"
+        },
+        "ck3tiger.ck3Path": {
+          "scope": "application",
+          "type": "string",
+          "description": "The location of a vanilla CK3 installation (like \"C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings III/game\""
+        },
+        "ck3tiger.modPath": {
+          "scope": "application",
+          "type": "string",
+          "description": "The location of your .mod file (like \"Like Documents/Paradox Interactive/Crusader Kings III/mod/<.mod file>\""
         }
+      }
     }
   },
   "scripts": {
