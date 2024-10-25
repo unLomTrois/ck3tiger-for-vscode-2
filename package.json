@@ -1,10 +1,18 @@
 {
   "name": "ck3tiger-for-vscode",
-  "displayName": "ck3tiger-for-vscode",
-  "description": "",
+  "displayName": "ck3tiger for VS Code",
+  "description": "Integrates ck3tiger logs with Visual Studio Code",
   "version": "1.0.1",
   "engines": {
     "vscode": "^1.93.0"
+  },
+  "author": {
+    "name": "Vadim Kuznetsov",
+    "url": "https://github.com/unLomTrois"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/unLomTrois/ck3tiger-for-vscode-2"
   },
   "categories": [
     "Other",
