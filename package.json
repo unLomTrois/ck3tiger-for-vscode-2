@@ -15,7 +15,8 @@
     "paradox",
     "ck3",
     "crusader kings 3",
-    "ck3tiger"
+    "ck3tiger",
+    "pdxscript"
   ],
   "activationEvents": [
     "onStartupFinished",
