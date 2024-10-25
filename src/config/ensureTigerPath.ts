@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { log } from "./logger";
+import { log } from "../logger";
 
 /**
  * Ensure that the CK3-Tiger path is properly configured.
