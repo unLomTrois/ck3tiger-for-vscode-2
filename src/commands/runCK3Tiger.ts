@@ -6,7 +6,7 @@ import { generateProblems } from "../generateProblems";
 
 export function runCK3TigerCommand(context: vscode.ExtensionContext) {
     const disposable = vscode.commands.registerCommand(
-        "ck3tiger-for-vscode-2.runCk3tiger",
+        "ck3tiger-for-vscode.runCk3tiger",
         runCK3TigerWithProgress
     );
 

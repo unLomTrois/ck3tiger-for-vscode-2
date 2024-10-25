@@ -1,30 +1,39 @@
 {
-  "name": "ck3tiger-for-vscode-2",
+  "name": "ck3tiger-for-vscode",
   "displayName": "ck3tiger-for-vscode",
   "description": "",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "engines": {
     "vscode": "^1.93.0"
   },
   "categories": [
-    "Other"
+    "Other",
+    "Programming Languages",
+    "Linters"
+  ],
+  "keywords": [
+    "paradox",
+    "ck3",
+    "crusader kings 3",
+    "ck3tiger"
   ],
   "activationEvents": [
-    "*"
+    "onStartupFinished",
+    "onLanguage:ck3"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "ck3tiger-for-vscode-2.runCk3tiger",
+        "command": "ck3tiger-for-vscode.runCk3tiger",
         "title": "ck3tiger: Run ck3tiger"
       },
       {
-        "command": "ck3tiger-for-vscode-2.resetPaths",
+        "command": "ck3tiger-for-vscode.resetPaths",
         "title": "ck3tiger: Reset Paths"
       },
       {
-        "command": "ck3tiger-for-vscode-2.getProblemsFromLog",
+        "command": "ck3tiger-for-vscode.getProblemsFromLog",
         "title": "ck3tiger: Get problems from the log file (without running ck3tiger)"
       }
     ],
