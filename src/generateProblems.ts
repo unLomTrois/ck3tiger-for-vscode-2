@@ -25,6 +25,12 @@ function handleProblems(problems: ErrorEntry[]): DiagnosticsByFile {
     const diagnosticsByFile: DiagnosticsByFile = {};
 
     for (const problem of problems) {
+        // todo: add a configuration to select which problems to show
+        // skip if it is weak
+        if (problem.confidence === "weak") {
+            continue;
+        }
+
         handleProblem(problem, diagnosticsByFile);
     }
 
@@ -52,7 +58,59 @@ function handleProblem(
             diagnosticsByFile[filePath] = [];
         }
 
-        const diagnostic = handleLocation(problem, location);
+        const diagnostic = createDiagnostic(problem, location);
+
+        // sub-problems
+        if (problem.locations.length > 1) {
+            let locationIdx = 1;
+
+            for (const subLocation of problem.locations.slice(1)) {
+                const diagnostic = createDiagnostic(problem, subLocation);
+                diagnostic.relatedInformation = [
+                    {
+                        message: "root",
+                        location: {
+                            uri: vscode.Uri.file(filePath),
+                            range: setRange(location),
+                        },
+                    },
+                ];
+                // const otherLocations = problem.locations.slice(locationIdx+1);
+                // diagnostic.relatedInformation.push(
+                //     ...otherLocations.map((location) => {
+                //         return {
+                //             message: "from there2!",
+                //             location: {
+                //                 uri: vscode.Uri.file(location.fullpath),
+                //                 range: setRange(location),
+                //             },
+                //         };
+                //     })
+                // );
+
+                diagnostic.severity = vscode.DiagnosticSeverity.Error;
+
+                const subFilePath = subLocation.fullpath;
+                if (!diagnosticsByFile[subFilePath]) {
+                    diagnosticsByFile[subFilePath] = [];
+                }
+                diagnosticsByFile[subFilePath].push(diagnostic);
+
+                locationIdx += 1;
+            }
+
+            const otherLocations = problem.locations.slice(1);
+
+            diagnostic.relatedInformation = otherLocations.map((location) => {
+                return {
+                    message: "from there!",
+                    location: {
+                        uri: vscode.Uri.file(location.fullpath),
+                        range: setRange(location),
+                    },
+                };
+            });
+        }
 
         diagnosticsByFile[filePath].push(diagnostic);
     } catch (error) {
@@ -65,7 +123,7 @@ function handleProblem(
     }
 }
 
-function handleLocation(
+function createDiagnostic(
     problem: ErrorEntry,
     location: TigerLocation
 ): vscode.Diagnostic {
@@ -81,7 +139,7 @@ function handleLocation(
     // Create a diagnostic for the current problem
     const diagnostic = new vscode.Diagnostic(range, message, severity);
     diagnostic.source = "ck3tiger";
-    diagnostic.code = problem.key;
+    diagnostic.code = `${problem.confidence} ${problem.key}`;
 
     return diagnostic;
 }

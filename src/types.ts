@@ -8,9 +8,13 @@ export type TigerLocation = {
     path: string;
     tag: string | null;
 };
+
 type TigerSeverity = "tips" | "untidy" | "warning" | "error" | "fatal";
+
+type TigerConfidence = "strong" | "reasonable" | "weak";
+
 export type ErrorEntry = {
-    confidence: string;
+    confidence: TigerConfidence;
     info: string | null;
     key: string;
     locations: TigerLocation[];
