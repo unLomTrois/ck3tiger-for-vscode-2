@@ -8,7 +8,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Initial release
 
-## [version] - 2024-11-06
+## [1.0.4] - 2024-11-06
+
+### Added
+
+- logo attribution to README
+
+## [1.0.3] - 2024-11-06
 
 ### Added
 
