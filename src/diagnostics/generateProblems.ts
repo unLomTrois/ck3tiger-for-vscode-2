@@ -166,16 +166,16 @@ function setRange(location: TigerLocation): vscode.Range {
 
 function setSeverity(problem: ErrorEntry): vscode.DiagnosticSeverity {
     switch (problem.severity) {
-    case "tips":
-        return vscode.DiagnosticSeverity.Hint;
-    case "untidy":
-        return vscode.DiagnosticSeverity.Information;
-    case "warning":
-        return vscode.DiagnosticSeverity.Warning;
-    case "error":
-    case "fatal":
-        return vscode.DiagnosticSeverity.Error;
-    default:
-        return vscode.DiagnosticSeverity.Error;
+        case "tips":
+            return vscode.DiagnosticSeverity.Hint;
+        case "untidy":
+            return vscode.DiagnosticSeverity.Information;
+        case "warning":
+            return vscode.DiagnosticSeverity.Warning;
+        case "error":
+        case "fatal":
+            return vscode.DiagnosticSeverity.Error;
+        default:
+            return vscode.DiagnosticSeverity.Error;
     }
 }
