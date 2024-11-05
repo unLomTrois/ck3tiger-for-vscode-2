@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
 
-import { init as initLogger, log, revealLog } from "./logger";
+import { initLogger, log } from "./logger";
 import { checkConfiguration } from "./config/configuration";
 import { initStatusBarButton } from "./statusBar";
 import { runCK3TigerCommand } from "./commands/runCK3Tiger";
@@ -12,7 +12,6 @@ import { resetPathsCommand } from "./commands/resetPaths";
 // Your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext) {
     initLogger();
-    revealLog();
 
     log("Initializing ck3tiger extension");
 
