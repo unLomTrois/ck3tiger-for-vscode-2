@@ -54,3 +54,8 @@ Please be aware that this extension is still in development and may have some ro
 Currently, it has been tested only on Windows, and its compatibility with Linux systems is not guaranteed.
 
 Feel free to try it out and provide feedback to help us improve the extension further!
+
+
+# Attribution
+
+    Logo uses emoji designed by [OpenMoji](https://openmoji.org/) – the open-source emoji and icon project. License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/#)
