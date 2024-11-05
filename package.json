@@ -2,7 +2,7 @@
   "name": "ck3tiger-for-vscode",
   "displayName": "ck3tiger for VS Code",
   "description": "Integrates ck3tiger logs with Visual Studio Code",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "engines": {
     "vscode": "^1.93.0"
   },
@@ -37,6 +37,10 @@
       {
         "command": "ck3tiger-for-vscode.runCk3tiger",
         "title": "ck3tiger: Run ck3tiger"
+      },
+      {
+        "command": "ck3tiger-for-vscode.updateCk3tiger",
+        "title": "ck3tiger: Update ck3tiger"
       },
       {
         "command": "ck3tiger-for-vscode.resetPaths",
