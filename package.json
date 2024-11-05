@@ -2,7 +2,8 @@
   "name": "ck3tiger-for-vscode",
   "displayName": "ck3tiger for VS Code",
   "description": "Integrates ck3tiger logs with Visual Studio Code",
-  "version": "1.0.2",
+  "version": "1.0.3",
+  "icon": "images/logo.png",
   "engines": {
     "vscode": "^1.93.0"
   },

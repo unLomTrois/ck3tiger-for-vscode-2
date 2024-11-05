@@ -8,6 +8,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Initial release
 
+## [version] - 2024-11-06
+
+### Added
+
+- logo
+
 ## [1.0.2] - 2024-11-05
 
 ### Added
