@@ -8,6 +8,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Initial release
 
+## [1.0.6] - 2024-11-06
+
+### Fixed
+
+- Attribution to OpenMoji
+
 ## [1.0.5] - 2024-11-06
 
 ### Added
