@@ -8,6 +8,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Initial release
 
+## [1.0.7] - 2024-11-07
+
+### Added
+
+- Minimal Confidence settings - now you can set the threshold (weak, reasonable, strong)
+
 ## [1.0.6] - 2024-11-06
 
 ### Fixed
