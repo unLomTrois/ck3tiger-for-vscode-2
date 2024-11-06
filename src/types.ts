@@ -9,9 +9,11 @@ export type TigerLocation = {
     tag: string | null;
 };
 
-type TigerSeverity = "tips" | "untidy" | "warning" | "error" | "fatal";
+export type TigerSeverity = "tips" | "untidy" | "warning" | "error" | "fatal";
 
-type TigerConfidence = "strong" | "reasonable" | "weak";
+export type TigerConfidence = "strong" | "reasonable" | "weak";
+
+export const confidenceLevels: TigerConfidence[] = ["weak", "reasonable", "strong"];
 
 export type ErrorEntry = {
     confidence: TigerConfidence;

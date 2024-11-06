@@ -1,7 +1,12 @@
 import * as vscode from "vscode";
 import { getDiagnosticCollection } from "./collection";
 import { log, revealLog } from "../logger";
-import { ErrorEntry, TigerLocation } from "../types";
+import {
+    confidenceLevels,
+    ErrorEntry,
+    TigerConfidence,
+    TigerLocation,
+} from "../types";
 
 export function generateProblems(log_data: ErrorEntry[]) {
     const diagnosticCollection = getDiagnosticCollection();
@@ -24,12 +29,19 @@ type DiagnosticsByFile = { [filePath: string]: vscode.Diagnostic[] };
 function handleProblems(problems: ErrorEntry[]): DiagnosticsByFile {
     const diagnosticsByFile: DiagnosticsByFile = {};
 
+    const config = vscode.workspace.getConfiguration("ck3tiger");
+
+    const minConfidence =
+        config.get<TigerConfidence>("minConfidence") ?? "weak";
+
     for (const problem of problems) {
-        // todo: add a configuration to select which problems to show
-        // skip if it is weak
-        // if (problem.confidence === "weak") {
-        //     continue;
-        // }
+        // Continue if problem's confidence is lower than minConfidence
+        if (
+            confidenceLevels.indexOf(problem.confidence) <
+            confidenceLevels.indexOf(minConfidence)
+        ) {
+            continue;
+        }
 
         handleProblem(problem, diagnosticsByFile);
     }

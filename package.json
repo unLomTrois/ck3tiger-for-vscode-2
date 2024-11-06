@@ -1,103 +1,120 @@
 {
-  "name": "ck3tiger-for-vscode",
-  "displayName": "ck3tiger for VS Code",
-  "description": "Helps you make mods for Crusader Kings 3 using ck3tiger",
-  "version": "1.0.6",
-  "icon": "images/logo.png",
-  "engines": {
-    "vscode": "^1.93.0"
-  },
-  "publisher": "unlomtrois",
-  "author": {
-    "name": "Vadim Kuznetsov",
-    "url": "https://github.com/unLomTrois"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/unLomTrois/ck3tiger-for-vscode-2"
-  },
-  "categories": [
-    "Other",
-    "Programming Languages",
-    "Linters"
-  ],
-  "keywords": [
-    "paradox",
-    "ck3",
-    "crusader kings 3",
-    "ck3tiger",
-    "pdxscript"
-  ],
-  "activationEvents": [
-    "onStartupFinished",
-    "onLanguage:ck3"
-  ],
-  "main": "./dist/extension.js",
-  "contributes": {
-    "commands": [
-      {
-        "command": "ck3tiger-for-vscode.runCk3tiger",
-        "title": "ck3tiger: Run ck3tiger"
-      },
-      {
-        "command": "ck3tiger-for-vscode.updateCk3tiger",
-        "title": "ck3tiger: Update ck3tiger"
-      },
-      {
-        "command": "ck3tiger-for-vscode.resetPaths",
-        "title": "ck3tiger: Reset Paths"
-      },
-      {
-        "command": "ck3tiger-for-vscode.getProblemsFromLog",
-        "title": "ck3tiger: Get problems from the log file (without running ck3tiger)"
-      }
+    "name": "ck3tiger-for-vscode",
+    "displayName": "ck3tiger for VS Code",
+    "description": "Helps you make mods for Crusader Kings 3 using ck3tiger",
+    "version": "1.0.7",
+    "icon": "images/logo.png",
+    "engines": {
+        "vscode": "^1.93.0"
+    },
+    "publisher": "unlomtrois",
+    "author": {
+        "name": "Vadim Kuznetsov",
+        "url": "https://github.com/unLomTrois"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/unLomTrois/ck3tiger-for-vscode-2"
+    },
+    "categories": [
+        "Other",
+        "Programming Languages",
+        "Linters"
     ],
-    "configuration": {
-      "title": "ck3tiger configuration",
-      "properties": {
-        "ck3tiger.tigerPath": {
-          "scope": "application",
-          "type": "string",
-          "markdownDescription": "Specifies location of your ck3tiger instance"
-        },
-        "ck3tiger.ck3Path": {
-          "scope": "application",
-          "type": "string",
-          "description": "The location of a vanilla CK3 installation (like \"C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings III/game\""
-        },
-        "ck3tiger.modPath": {
-          "scope": "application",
-          "type": "string",
-          "description": "The location of your .mod file (like \"Like Documents/Paradox Interactive/Crusader Kings III/mod/<.mod file>\""
+    "keywords": [
+        "paradox",
+        "ck3",
+        "crusader kings 3",
+        "ck3tiger",
+        "pdxscript"
+    ],
+    "activationEvents": [
+        "onStartupFinished",
+        "onLanguage:ck3"
+    ],
+    "main": "./dist/extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "ck3tiger-for-vscode.runCk3tiger",
+                "title": "ck3tiger: Run ck3tiger"
+            },
+            {
+                "command": "ck3tiger-for-vscode.updateCk3tiger",
+                "title": "ck3tiger: Update ck3tiger"
+            },
+            {
+                "command": "ck3tiger-for-vscode.resetPaths",
+                "title": "ck3tiger: Reset Paths"
+            },
+            {
+                "command": "ck3tiger-for-vscode.getProblemsFromLog",
+                "title": "ck3tiger: Get problems from the log file (without running ck3tiger)"
+            }
+        ],
+        "configuration": {
+            "title": "ck3tiger configuration",
+            "properties": {
+                "ck3tiger.tigerPath": {
+                    "scope": "application",
+                    "type": "string",
+                    "markdownDescription": "Specifies location of your ck3tiger instance"
+                },
+                "ck3tiger.ck3Path": {
+                    "scope": "application",
+                    "type": "string",
+                    "description": "The location of a vanilla CK3 installation (like \"C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings III/game\""
+                },
+                "ck3tiger.modPath": {
+                    "scope": "application",
+                    "type": "string",
+                    "description": "The location of your .mod file (like \"Like Documents/Paradox Interactive/Crusader Kings III/mod/<.mod file>\""
+                },
+                "ck3tiger.minConfidence": {
+                    "title": "Minimum confidence level",
+                    "scope": "application",
+                    "type": "string",
+                    "enum": [
+                        "weak",
+                        "reasonable",
+                        "strong"
+                    ],
+                    "default": "weak",
+                    "markdownEnumDescriptions": [
+                        "*weak* for likely false positives.",
+                        "*reasonable* for most messages.",
+                        "*strong* for confidence that the problem is real."
+                    ],
+                    "markdownDescription": "\nThe minimum confidence level for a problem to be reported.\n\nConfidence is how sure the validator is about a problem.\n\n- *weak* for likely false positives.\n- *reasonable* for most messages.\n- *strong* for confidence that the problem is real.\n\n**weak** is the default."
+                }
+            }
         }
-      }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run package",
+        "compile": "npm run check-types && npm run lint && node esbuild.js",
+        "watch": "npm-run-all -p watch:*",
+        "watch:esbuild": "node esbuild.js --watch",
+        "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+        "package": "npm run check-types && npm run lint && node esbuild.js --production",
+        "compile-tests": "tsc -p . --outDir out",
+        "watch-tests": "tsc -p . -w --outDir out",
+        "pretest": "npm run compile-tests && npm run compile && npm run lint",
+        "check-types": "tsc --noEmit",
+        "lint": "eslint src",
+        "test": "vscode-test"
+    },
+    "devDependencies": {
+        "@types/mocha": "^10.0.8",
+        "@types/node": "20.x",
+        "@types/vscode": "^1.93.0",
+        "@typescript-eslint/eslint-plugin": "^8.7.0",
+        "@typescript-eslint/parser": "^8.7.0",
+        "@vscode/test-cli": "^0.0.10",
+        "@vscode/test-electron": "^2.4.1",
+        "esbuild": "^0.24.0",
+        "eslint": "^9.11.1",
+        "npm-run-all": "^4.1.5",
+        "typescript": "^5.4.5"
     }
-  },
-  "scripts": {
-    "vscode:prepublish": "npm run package",
-    "compile": "npm run check-types && npm run lint && node esbuild.js",
-    "watch": "npm-run-all -p watch:*",
-    "watch:esbuild": "node esbuild.js --watch",
-    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
-    "package": "npm run check-types && npm run lint && node esbuild.js --production",
-    "compile-tests": "tsc -p . --outDir out",
-    "watch-tests": "tsc -p . -w --outDir out",
-    "pretest": "npm run compile-tests && npm run compile && npm run lint",
-    "check-types": "tsc --noEmit",
-    "lint": "eslint src",
-    "test": "vscode-test"
-  },
-  "devDependencies": {
-    "@types/mocha": "^10.0.8",
-    "@types/node": "20.x",
-    "@types/vscode": "^1.93.0",
-    "@typescript-eslint/eslint-plugin": "^8.7.0",
-    "@typescript-eslint/parser": "^8.7.0",
-    "@vscode/test-cli": "^0.0.10",
-    "@vscode/test-electron": "^2.4.1",
-    "esbuild": "^0.24.0",
-    "eslint": "^9.11.1",
-    "npm-run-all": "^4.1.5",
-    "typescript": "^5.4.5"
-  }
 }
