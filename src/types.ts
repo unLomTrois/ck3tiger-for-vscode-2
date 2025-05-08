@@ -1,3 +1,5 @@
+import type { Diagnostic } from "vscode";
+
 export type TigerLocation = {
     column: number;
     from: string;
@@ -23,3 +25,5 @@ export type ErrorEntry = {
     message: string;
     severity: TigerSeverity;
 };
+
+export type DiagnosticsByFile = { [filePath: string]: Diagnostic[] };

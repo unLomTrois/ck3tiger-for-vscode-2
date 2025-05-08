@@ -3,6 +3,7 @@ import { getDiagnosticCollection } from "./collection";
 import { log, revealLog } from "../logger";
 import {
     confidenceLevels,
+    DiagnosticsByFile,
     ErrorEntry,
     TigerConfidence,
     TigerLocation,
@@ -29,8 +30,6 @@ export function generateProblems(logData: ErrorEntry[]): vscode.DiagnosticCollec
 
     return diagnosticCollection;
 }
-
-type DiagnosticsByFile = { [filePath: string]: vscode.Diagnostic[] };
 
 /**
  * Groups problems by file path and filters by confidence level
@@ -71,73 +70,118 @@ function processProblemIntoDiagnostics(
     diagnosticsByFile: DiagnosticsByFile
 ): void {
     try {
-        const location = problem.locations[0];
-
-        // skip if it is colors problem (not stable enough)
-        if (problem.key === "colors") {
-            console.log("Skipping problem with null line number");
-            console.log(problem);
+        if (shouldSkipProblem(problem)) {
             return;
         }
 
-        const filePath = location.fullpath;
-
-        // Create an array of diagnostics for the current file if it doesn't exist
-        if (!diagnosticsByFile[filePath]) {
-            diagnosticsByFile[filePath] = [];
-        }
-
-        const diagnostic = createDiagnostic(problem, location);
-
-        // sub-problems
+        const primaryLocation = problem.locations[0];
+        const primaryFilePath = primaryLocation.fullpath;
+        
+        ensureDiagnosticsArrayExists(diagnosticsByFile, primaryFilePath);
+        
+        // Process the primary diagnostic
+        const primaryDiagnostic = createDiagnostic(problem, primaryLocation);
+        
+        // Handle related locations if they exist
         if (problem.locations.length > 1) {
-            let locationIdx = 1;
-
-            for (const subLocation of problem.locations.slice(1)) {
-                const diagnostic = createDiagnostic(problem, subLocation);
-                diagnostic.relatedInformation = [
-                    {
-                        message: "root",
-                        location: {
-                            uri: vscode.Uri.file(filePath),
-                            range: createRangeFromLocation(location),
-                        },
-                    },
-                ];
-
-                diagnostic.severity = vscode.DiagnosticSeverity.Error;
-
-                const subFilePath = subLocation.fullpath;
-                if (!diagnosticsByFile[subFilePath]) {
-                    diagnosticsByFile[subFilePath] = [];
-                }
-                diagnosticsByFile[subFilePath].push(diagnostic);
-
-                locationIdx += 1;
-            }
-
-            const otherLocations = problem.locations.slice(1);
-
-            diagnostic.relatedInformation = otherLocations.map((location) => {
-                return {
-                    message: "from there!",
-                    location: {
-                        uri: vscode.Uri.file(location.fullpath),
-                        range: createRangeFromLocation(location),
-                    },
-                };
-            });
+            processRelatedLocations(problem, primaryLocation, primaryDiagnostic, diagnosticsByFile);
         }
-
-        diagnosticsByFile[filePath].push(diagnostic);
+        
+        // Add the primary diagnostic to the collection
+        diagnosticsByFile[primaryFilePath].push(primaryDiagnostic);
     } catch (error) {
-        log(error);
-        log(JSON.stringify(problem));
-        vscode.window.showErrorMessage(
-            "Something went wrong while generating diagnostics"
-        );
-        revealLog();
+        handleProcessingError(error, problem);
     }
+}
+
+/**
+ * Determines if a problem should be skipped based on certain criteria
+ * @param problem The problem to evaluate
+ * @returns True if the problem should be skipped, false otherwise
+ */
+function shouldSkipProblem(problem: ErrorEntry): boolean {
+    // Skip color problems (not stable enough)
+    if (problem.key === "colors") {
+        console.log("Skipping problem with key 'colors'");
+        console.log(problem);
+        return true;
+    }
+    
+    return false;
+}
+
+/**
+ * Ensures that an array exists for the given file path in the diagnostics map
+ * @param diagnosticsByFile The map of diagnostics by file
+ * @param filePath The file path to check
+ */
+function ensureDiagnosticsArrayExists(
+    diagnosticsByFile: DiagnosticsByFile, 
+    filePath: string
+): void {
+    if (!diagnosticsByFile[filePath]) {
+        diagnosticsByFile[filePath] = [];
+    }
+}
+
+/**
+ * Processes related locations for a problem, creating diagnostics for each
+ * @param problem The original problem
+ * @param primaryLocation The primary location of the problem
+ * @param primaryDiagnostic The diagnostic for the primary location
+ * @param diagnosticsByFile The map to update with new diagnostics
+ */
+function processRelatedLocations(
+    problem: ErrorEntry,
+    primaryLocation: TigerLocation,
+    primaryDiagnostic: vscode.Diagnostic,
+    diagnosticsByFile: DiagnosticsByFile
+): void {
+    const primaryFilePath = primaryLocation.fullpath;
+    const relatedLocations = problem.locations.slice(1);
+    
+    // Add related information to the primary diagnostic
+    primaryDiagnostic.relatedInformation = relatedLocations.map((location) => ({
+        message: "from there!",
+        location: {
+            uri: vscode.Uri.file(location.fullpath),
+            range: createRangeFromLocation(location),
+        },
+    }));
+    
+    // Create diagnostics for each related location
+    for (const subLocation of relatedLocations) {
+        const subDiagnostic = createDiagnostic(problem, subLocation);
+        
+        // Link back to the primary location
+        subDiagnostic.relatedInformation = [{
+            message: "root",
+            location: {
+                uri: vscode.Uri.file(primaryFilePath),
+                range: createRangeFromLocation(primaryLocation),
+            },
+        }];
+        
+        subDiagnostic.severity = vscode.DiagnosticSeverity.Error;
+        
+        const subFilePath = subLocation.fullpath;
+        ensureDiagnosticsArrayExists(diagnosticsByFile, subFilePath);
+        diagnosticsByFile[subFilePath].push(subDiagnostic);
+    }
+}
+
+/**
+ * Handles errors that occur during problem processing
+ * @param error The error that occurred
+ * @param problem The problem being processed when the error occurred
+ */
+function handleProcessingError(error: unknown, problem: ErrorEntry): void {
+    log(error);
+    log(JSON.stringify(problem));
+    vscode.window.showErrorMessage(
+        "Something went wrong while generating diagnostics"
+    );
+    revealLog();
 }
 
 /**
