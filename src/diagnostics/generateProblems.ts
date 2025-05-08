@@ -8,12 +8,12 @@ import {
     TigerLocation,
 } from "../types";
 
-export function generateProblems(log_data: ErrorEntry[]) {
+export function generateProblems(logData: ErrorEntry[]): vscode.DiagnosticCollection {
     const diagnosticCollection = getDiagnosticCollection();
 
     diagnosticCollection.clear();
 
-    const diagnosticsByFile = handleProblems(log_data);
+    const diagnosticsByFile = groupProblemsByFile(logData);
 
     // Update the diagnostic collection for each file
     for (const [filePath, diagnostics] of Object.entries(diagnosticsByFile)) {
@@ -26,12 +26,12 @@ export function generateProblems(log_data: ErrorEntry[]) {
 
 type DiagnosticsByFile = { [filePath: string]: vscode.Diagnostic[] };
 
-function handleProblems(problems: ErrorEntry[]): DiagnosticsByFile {
+function groupProblemsByFile(problems: ErrorEntry[]): DiagnosticsByFile {
     const diagnosticsByFile: DiagnosticsByFile = {};
 
     const config = vscode.workspace.getConfiguration("ck3tiger");
 
-    const minConfidence =
+    const minConfidence: TigerConfidence =
         config.get<TigerConfidence>("minConfidence") ?? "weak";
 
     for (const problem of problems) {
@@ -43,13 +43,13 @@ function handleProblems(problems: ErrorEntry[]): DiagnosticsByFile {
             continue;
         }
 
-        handleProblem(problem, diagnosticsByFile);
+        processProblemIntoDiagnostics(problem, diagnosticsByFile);
     }
 
     return diagnosticsByFile;
 }
 
-function handleProblem(
+function processProblemIntoDiagnostics(
     problem: ErrorEntry,
     diagnosticsByFile: DiagnosticsByFile
 ): void {
@@ -83,7 +83,7 @@ function handleProblem(
                         message: "root",
                         location: {
                             uri: vscode.Uri.file(filePath),
-                            range: setRange(location),
+                            range: createRangeFromLocation(location),
                         },
                     },
                 ];
@@ -94,7 +94,7 @@ function handleProblem(
                 //             message: "from there2!",
                 //             location: {
                 //                 uri: vscode.Uri.file(location.fullpath),
-                //                 range: setRange(location),
+                //                 range: createRangeFromLocation(location),
                 //             },
                 //         };
                 //     })
@@ -118,7 +118,7 @@ function handleProblem(
                     message: "from there!",
                     location: {
                         uri: vscode.Uri.file(location.fullpath),
-                        range: setRange(location),
+                        range: createRangeFromLocation(location),
                     },
                 };
             });
@@ -145,8 +145,8 @@ function createDiagnostic(
         message = `${message}\ntip: ${problem.info}`;
     }
 
-    const range = setRange(location);
-    const severity = setSeverity(problem);
+    const range = createRangeFromLocation(location);
+    const severity = mapSeverityToDiagnosticSeverity(problem);
 
     // Create a diagnostic for the current problem
     const diagnostic = new vscode.Diagnostic(range, message, severity);
@@ -156,7 +156,7 @@ function createDiagnostic(
     return diagnostic;
 }
 
-function setRange(location: TigerLocation): vscode.Range {
+function createRangeFromLocation(location: TigerLocation): vscode.Range {
     // if error is for the whole file (like encoding errors, match the whole first line)
     if (location.linenr === null || location.column === null) {
         // Returning a default range of (0, 0) to (0, 1) to indicate an unspecified location.
@@ -176,7 +176,7 @@ function setRange(location: TigerLocation): vscode.Range {
     return new vscode.Range(start, end);
 }
 
-function setSeverity(problem: ErrorEntry): vscode.DiagnosticSeverity {
+function mapSeverityToDiagnosticSeverity(problem: ErrorEntry): vscode.DiagnosticSeverity {
     switch (problem.severity) {
         case "tips":
             return vscode.DiagnosticSeverity.Hint;

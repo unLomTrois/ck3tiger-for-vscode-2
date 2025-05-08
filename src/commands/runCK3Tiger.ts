@@ -45,15 +45,15 @@ async function handleTigerProgress(
         message: `Running ck3tiger`,
     });
 
-    const log_path = getTigerLog(tigerPath);
+    const logPath = getTigerLog(tigerPath);
 
-    await runCK3Tiger(tigerPath, ck3Path, modPath, log_path);
+    await runCK3Tiger(tigerPath, ck3Path, modPath, logPath);
 
     progress.report({
         message: "Loading tiger.json",
     });
 
-    const logData = await readTigerLog(log_path);
+    const logData = await readTigerLog(logPath);
 
     progress.report({
         message: "Generating problems",
@@ -79,12 +79,12 @@ async function runCK3Tiger(
     });
 }
 
-async function readTigerLog(log_path: string) {
+async function readTigerLog(logPath: string) {
     try {
-        const log_uri = vscode.Uri.file(log_path);
-        const log_file = await vscode.workspace.fs.readFile(log_uri);
-        const log_data = JSON.parse(Buffer.from(log_file).toString());
-        return log_data;
+        const logUri = vscode.Uri.file(logPath);
+        const logFile = await vscode.workspace.fs.readFile(logUri);
+        const logData = JSON.parse(Buffer.from(logFile).toString());
+        return logData;
     } catch (err: any) {
         vscode.window.showErrorMessage(
             `Failed to read or parse tiger log file: ${err.message}`
