@@ -3,6 +3,8 @@ import path from "path";
 import cp from "node:child_process";
 import { checkConfiguration, getPaths } from "../config/configuration";
 import { generateProblems } from "../diagnostics/generateProblems";
+import { TigerReport } from "../types";
+import { log } from "../logger";
 
 export function runCK3TigerCommand(context: vscode.ExtensionContext) {
     const disposable = vscode.commands.registerCommand(
@@ -79,18 +81,29 @@ async function runCK3Tiger(
     });
 }
 
-async function readTigerLog(logPath: string) {
+/**
+ * Reads and parses the tiger.json log file
+ * @param logPath Path to the tiger.json log file
+ * @returns Parsed tiger report data
+ * @throws Error if the file cannot be read or parsed
+ */
+async function readTigerLog(logPath: string): Promise<TigerReport[]> {
+    const logUri = vscode.Uri.file(logPath);
+
     try {
-        const logUri = vscode.Uri.file(logPath);
+        // Read the file
         const logFile = await vscode.workspace.fs.readFile(logUri);
-        const logData = JSON.parse(Buffer.from(logFile).toString());
+        // Parse the JSON content
+        const logData = JSON.parse(Buffer.from(logFile).toString()) as TigerReport[];
         return logData;
-    } catch (err: any) {
-        vscode.window.showErrorMessage(
-            `Failed to read or parse tiger log file: ${err.message}`
-        );
-        throw new Error(
-            `Failed to read or parse tiger log file: ${err.message}`
-        );
+    } catch (error: unknown) {
+        // Determine if it's a parsing error or a file reading error
+        const isParseError = error instanceof SyntaxError;
+        const errorType = isParseError ? "parse" : "read";
+
+        const errorMessage = `Failed to ${errorType} tiger log file: ${error instanceof Error ? error.message : 'Unknown error'}`;
+        log(errorMessage);
+        vscode.window.showErrorMessage(errorMessage);
+        throw new Error(errorMessage);
     }
 }
