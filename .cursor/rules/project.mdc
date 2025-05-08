@@ -1,0 +1,36 @@
+---
+description: Short project description - to refresh memory
+globs: 
+alwaysApply: false
+---
+# ck3tiger-for-vscode Project Overview
+
+## Purpose
+VS Code extension that integrates ck3tiger (validator for Crusader Kings 3 mods) directly into VS Code, displaying validation errors in the Problems panel and in-editor.
+
+## Key Components
+- `extension.ts`: Entry point that initializes everything
+- `commands/`: Implementation of extension commands (run/update ck3tiger, reset paths)
+- `diagnostics/`: Processes validation results into VS Code diagnostics
+- `config/`: Configuration management
+- `types.ts`: TypeScript type definitions for the project
+
+## Basic Workflow
+1. Extension asks for paths (ck3tiger binary, CK3 game folder, mod file)
+2. User runs validation via status bar or command
+3. Extension executes ck3tiger, parses JSON output, displays errors
+4. User fixes issues and reruns validation
+
+## Implementation Details
+- Not a language server - requires manual revalidation after fixes
+- Uses child_process to execute external ck3tiger binary
+- Parses tiger.json output file to generate VS Code diagnostic markers
+- Supports different severity levels (error, warning, info, hint)
+- Supports confidence filtering (weak, reasonable, strong)
+
+## Key Features
+- In-editor diagnostic display
+- Problem navigation via Problems panel
+- Update feature for ck3tiger binary
+- Low-RAM option to parse existing log without rerunning
+
