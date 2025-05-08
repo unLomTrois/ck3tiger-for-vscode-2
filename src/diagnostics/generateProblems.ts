@@ -8,6 +8,11 @@ import {
     TigerLocation,
 } from "../types";
 
+/**
+ * Generates VS Code diagnostics from ck3tiger validation results
+ * @param logData The parsed JSON output from ck3tiger
+ * @returns The diagnostic collection with errors mapped to files
+ */
 export function generateProblems(logData: ErrorEntry[]): vscode.DiagnosticCollection {
     const diagnosticCollection = getDiagnosticCollection();
 
@@ -26,6 +31,11 @@ export function generateProblems(logData: ErrorEntry[]): vscode.DiagnosticCollec
 
 type DiagnosticsByFile = { [filePath: string]: vscode.Diagnostic[] };
 
+/**
+ * Groups problems by file path and filters by confidence level
+ * @param problems Array of error entries from ck3tiger
+ * @returns Object mapping file paths to arrays of diagnostics
+ */
 function groupProblemsByFile(problems: ErrorEntry[]): DiagnosticsByFile {
     const diagnosticsByFile: DiagnosticsByFile = {};
 
@@ -49,6 +59,12 @@ function groupProblemsByFile(problems: ErrorEntry[]): DiagnosticsByFile {
     return diagnosticsByFile;
 }
 
+/**
+ * Processes a single problem into VS Code diagnostics
+ * Handles both primary locations and related sub-locations
+ * @param problem The error entry to process
+ * @param diagnosticsByFile The map of file paths to diagnostics arrays to update
+ */
 function processProblemIntoDiagnostics(
     problem: ErrorEntry,
     diagnosticsByFile: DiagnosticsByFile
@@ -87,18 +103,6 @@ function processProblemIntoDiagnostics(
                         },
                     },
                 ];
-                // const otherLocations = problem.locations.slice(locationIdx+1);
-                // diagnostic.relatedInformation.push(
-                //     ...otherLocations.map((location) => {
-                //         return {
-                //             message: "from there2!",
-                //             location: {
-                //                 uri: vscode.Uri.file(location.fullpath),
-                //                 range: createRangeFromLocation(location),
-                //             },
-                //         };
-                //     })
-                // );
 
                 diagnostic.severity = vscode.DiagnosticSeverity.Error;
 
@@ -135,6 +139,12 @@ function processProblemIntoDiagnostics(
     }
 }
 
+/**
+ * Creates a VS Code diagnostic from a ck3tiger problem
+ * @param problem The error entry containing message and severity
+ * @param location The location where the problem occurs
+ * @returns A VS Code diagnostic object
+ */
 function createDiagnostic(
     problem: ErrorEntry,
     location: TigerLocation
@@ -156,6 +166,12 @@ function createDiagnostic(
     return diagnostic;
 }
 
+/**
+ * Creates a VS Code Range from a ck3tiger location
+ * Handles cases where line numbers or columns are null (file-level errors)
+ * @param location The location information from ck3tiger
+ * @returns A VS Code Range object pointing to the appropriate position
+ */
 function createRangeFromLocation(location: TigerLocation): vscode.Range {
     // if error is for the whole file (like encoding errors, match the whole first line)
     if (location.linenr === null || location.column === null) {
@@ -176,6 +192,11 @@ function createRangeFromLocation(location: TigerLocation): vscode.Range {
     return new vscode.Range(start, end);
 }
 
+/**
+ * Maps ck3tiger severity levels to VS Code diagnostic severity levels
+ * @param problem The error entry containing a severity level
+ * @returns The appropriate VS Code DiagnosticSeverity
+ */
 function mapSeverityToDiagnosticSeverity(problem: ErrorEntry): vscode.DiagnosticSeverity {
     switch (problem.severity) {
         case "tips":
