@@ -17,7 +17,7 @@ export type TigerConfidence = "strong" | "reasonable" | "weak";
 
 export const confidenceLevels: TigerConfidence[] = ["weak", "reasonable", "strong"];
 
-export type ErrorEntry = {
+export type TigerReport = {
     confidence: TigerConfidence;
     info: string | null;
     key: string;

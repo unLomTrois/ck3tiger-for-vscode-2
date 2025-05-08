@@ -4,7 +4,7 @@ import { log, revealLog } from "../logger";
 import {
     confidenceLevels,
     DiagnosticsByFile,
-    ErrorEntry,
+    TigerReport,
     TigerConfidence,
     TigerLocation,
     TigerSeverity,
@@ -15,7 +15,7 @@ import {
  * @param logData The parsed JSON output from ck3tiger
  * @returns The diagnostic collection with errors mapped to files
  */
-export function generateProblems(logData: ErrorEntry[]): vscode.DiagnosticCollection {
+export function generateProblems(logData: TigerReport[]): vscode.DiagnosticCollection {
     const diagnosticCollection = getDiagnosticCollection();
 
     diagnosticCollection.clear();
@@ -36,7 +36,7 @@ export function generateProblems(logData: ErrorEntry[]): vscode.DiagnosticCollec
  * @param problems Array of error entries from ck3tiger
  * @returns Object mapping file paths to arrays of diagnostics
  */
-function groupProblemsByFile(problems: ErrorEntry[]): DiagnosticsByFile {
+function groupProblemsByFile(problems: TigerReport[]): DiagnosticsByFile {
     const diagnosticsByFile: DiagnosticsByFile = {};
 
     const config = vscode.workspace.getConfiguration("ck3tiger");
@@ -66,7 +66,7 @@ function groupProblemsByFile(problems: ErrorEntry[]): DiagnosticsByFile {
  * @param diagnosticsByFile The map of file paths to diagnostics arrays to update
  */
 function processProblemIntoDiagnostics(
-    problem: ErrorEntry,
+    problem: TigerReport,
     diagnosticsByFile: DiagnosticsByFile
 ): void {
     try {
@@ -99,7 +99,7 @@ function processProblemIntoDiagnostics(
  * @param problem The problem to evaluate
  * @returns True if the problem should be skipped, false otherwise
  */
-function shouldSkipProblem(problem: ErrorEntry): boolean {
+function shouldSkipProblem(problem: TigerReport): boolean {
     // Skip color problems (not stable enough)
     if (problem.key === "colors") {
         console.log("Skipping problem with key 'colors'");
@@ -132,7 +132,7 @@ function ensureDiagnosticsArrayExists(
  * @param diagnosticsByFile The map to update with new diagnostics
  */
 function processRelatedLocations(
-    problem: ErrorEntry,
+    problem: TigerReport,
     primaryLocation: TigerLocation,
     primaryDiagnostic: vscode.Diagnostic,
     diagnosticsByFile: DiagnosticsByFile
@@ -175,7 +175,7 @@ function processRelatedLocations(
  * @param error The error that occurred
  * @param problem The problem being processed when the error occurred
  */
-function handleProcessingError(error: unknown, problem: ErrorEntry): void {
+function handleProcessingError(error: unknown, problem: TigerReport): void {
     log(error);
     log(JSON.stringify(problem));
     vscode.window.showErrorMessage(
@@ -191,7 +191,7 @@ function handleProcessingError(error: unknown, problem: ErrorEntry): void {
  * @returns A VS Code diagnostic object
  */
 function createDiagnostic(
-    problem: ErrorEntry,
+    problem: TigerReport,
     location: TigerLocation
 ): vscode.Diagnostic {
     const range = createRangeFromLocation(location);
