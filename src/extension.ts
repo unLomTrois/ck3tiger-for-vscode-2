@@ -8,10 +8,13 @@ import { initStatusBarButton } from "./statusBar";
 import { runCK3TigerCommand } from "./commands/runCK3Tiger";
 import { resetPathsCommand } from "./commands/resetPaths";
 import { updateCK3TigerCommand } from "./commands/updateCK3Tiger";
+import { ContextContainer } from "./context";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext) {
+    ContextContainer.context = context;
+    
     initLogger();
 
     log("Initializing ck3tiger extension");

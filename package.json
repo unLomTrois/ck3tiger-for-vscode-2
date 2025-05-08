@@ -7,6 +7,7 @@
     "engines": {
         "vscode": "^1.93.0"
     },
+    "type": "commonjs",
     "publisher": "unlomtrois",
     "author": {
         "name": "Vadim Kuznetsov",
@@ -116,5 +117,8 @@
         "eslint": "^9.11.1",
         "npm-run-all": "^4.1.5",
         "typescript": "^5.4.5"
+    },
+    "dependencies": {
+        "@octokit/core": "^6.1.2"
     }
 }
