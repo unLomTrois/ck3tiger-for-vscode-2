@@ -6,6 +6,7 @@ import {
     ErrorEntry,
     TigerConfidence,
     TigerLocation,
+    TigerSeverity,
 } from "../types";
 
 /**
@@ -149,14 +150,14 @@ function createDiagnostic(
     problem: ErrorEntry,
     location: TigerLocation
 ): vscode.Diagnostic {
-    let message = problem.message;
-    // add tip info if exists
-    if (problem.info) {
-        message = `${message}\ntip: ${problem.info}`;
-    }
-
     const range = createRangeFromLocation(location);
-    const severity = mapSeverityToDiagnosticSeverity(problem);
+
+    // add tip info if exists
+    const message = problem.info
+        ? `${problem.message}\ntip: ${problem.info}`
+        : problem.message;
+
+    const severity = mapSeverityToDiagnosticSeverity(problem.severity);
 
     // Create a diagnostic for the current problem
     const diagnostic = new vscode.Diagnostic(range, message, severity);
@@ -197,8 +198,8 @@ function createRangeFromLocation(location: TigerLocation): vscode.Range {
  * @param problem The error entry containing a severity level
  * @returns The appropriate VS Code DiagnosticSeverity
  */
-function mapSeverityToDiagnosticSeverity(problem: ErrorEntry): vscode.DiagnosticSeverity {
-    switch (problem.severity) {
+function mapSeverityToDiagnosticSeverity(severity: TigerSeverity): vscode.DiagnosticSeverity {
+    switch (severity) {
         case "tips":
             return vscode.DiagnosticSeverity.Hint;
         case "untidy":
