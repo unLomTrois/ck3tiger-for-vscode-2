@@ -3,7 +3,6 @@ import { getDiagnosticCollection } from "./collection";
 import { log, revealLog } from "../logger";
 import {
     confidenceLevels,
-    DiagnosticsByFile,
     TigerReport,
     TigerConfidence,
     TigerLocation,
@@ -23,7 +22,7 @@ export function generateProblems(logData: TigerReport[]): vscode.DiagnosticColle
     const diagnosticsByFile = groupProblemsByFile(logData);
 
     // Update the diagnostic collection for each file
-    for (const [filePath, diagnostics] of Object.entries(diagnosticsByFile)) {
+    for (const [filePath, diagnostics] of diagnosticsByFile) {
         const fileUri = vscode.Uri.file(filePath);
         diagnosticCollection.set(fileUri, diagnostics);
     }
@@ -34,10 +33,10 @@ export function generateProblems(logData: TigerReport[]): vscode.DiagnosticColle
 /**
  * Groups problems by file path and filters by confidence level
  * @param problems Array of error entries from ck3tiger
- * @returns Object mapping file paths to arrays of diagnostics
+ * @returns Map of file paths to arrays of diagnostics
  */
-function groupProblemsByFile(problems: TigerReport[]): DiagnosticsByFile {
-    const diagnosticsByFile: DiagnosticsByFile = {};
+function groupProblemsByFile(problems: TigerReport[]): Map<string, vscode.Diagnostic[]> {
+    const diagnosticsByFile = new Map<string, vscode.Diagnostic[]>();
 
     const config = vscode.workspace.getConfiguration("ck3tiger");
 
@@ -67,7 +66,7 @@ function groupProblemsByFile(problems: TigerReport[]): DiagnosticsByFile {
  */
 function processProblemIntoDiagnostics(
     problem: TigerReport,
-    diagnosticsByFile: DiagnosticsByFile
+    diagnosticsByFile: Map<string, vscode.Diagnostic[]>
 ): void {
     try {
         if (shouldSkipProblem(problem)) {
@@ -76,19 +75,19 @@ function processProblemIntoDiagnostics(
 
         const primaryLocation = problem.locations[0];
         const primaryFilePath = primaryLocation.fullpath;
-        
-        ensureDiagnosticsArrayExists(diagnosticsByFile, primaryFilePath);
-        
+
         // Process the primary diagnostic
         const primaryDiagnostic = createDiagnostic(problem, primaryLocation);
+        
+        // Add the primary diagnostic to the collection - get existing array or create a new one
+        const primaryDiagnostics = diagnosticsByFile.get(primaryFilePath) || [];
+        primaryDiagnostics.push(primaryDiagnostic);
+        diagnosticsByFile.set(primaryFilePath, primaryDiagnostics);
         
         // Handle related locations if they exist
         if (problem.locations.length > 1) {
             processRelatedLocations(problem, primaryLocation, primaryDiagnostic, diagnosticsByFile);
         }
-        
-        // Add the primary diagnostic to the collection
-        diagnosticsByFile[primaryFilePath].push(primaryDiagnostic);
     } catch (error) {
         handleProcessingError(error, problem);
     }
@@ -111,20 +110,6 @@ function shouldSkipProblem(problem: TigerReport): boolean {
 }
 
 /**
- * Ensures that an array exists for the given file path in the diagnostics map
- * @param diagnosticsByFile The map of diagnostics by file
- * @param filePath The file path to check
- */
-function ensureDiagnosticsArrayExists(
-    diagnosticsByFile: DiagnosticsByFile, 
-    filePath: string
-): void {
-    if (!diagnosticsByFile[filePath]) {
-        diagnosticsByFile[filePath] = [];
-    }
-}
-
-/**
  * Processes related locations for a problem, creating diagnostics for each
  * @param problem The original problem
  * @param primaryLocation The primary location of the problem
@@ -135,7 +120,7 @@ function processRelatedLocations(
     problem: TigerReport,
     primaryLocation: TigerLocation,
     primaryDiagnostic: vscode.Diagnostic,
-    diagnosticsByFile: DiagnosticsByFile
+    diagnosticsByFile: Map<string, vscode.Diagnostic[]>
 ): void {
     const primaryFilePath = primaryLocation.fullpath;
     const relatedLocations = problem.locations.slice(1);
@@ -165,8 +150,11 @@ function processRelatedLocations(
         subDiagnostic.severity = vscode.DiagnosticSeverity.Error;
         
         const subFilePath = subLocation.fullpath;
-        ensureDiagnosticsArrayExists(diagnosticsByFile, subFilePath);
-        diagnosticsByFile[subFilePath].push(subDiagnostic);
+
+        // Get existing diagnostics or create a new array
+        const subDiagnostics = diagnosticsByFile.get(subFilePath) || [];
+        subDiagnostics.push(subDiagnostic);
+        diagnosticsByFile.set(subFilePath, subDiagnostics);
     }
 }
 
@@ -239,7 +227,7 @@ function createRangeFromLocation(location: TigerLocation): vscode.Range {
 
 /**
  * Maps ck3tiger severity levels to VS Code diagnostic severity levels
- * @param problem The error entry containing a severity level
+ * @param severity The severity level from ck3tiger
  * @returns The appropriate VS Code DiagnosticSeverity
  */
 function mapSeverityToDiagnosticSeverity(severity: TigerSeverity): vscode.DiagnosticSeverity {

@@ -1,4 +1,5 @@
 import type { Diagnostic } from "vscode";
+import * as vscode from "vscode";
 
 export type TigerLocation = {
     column: number;
@@ -17,6 +18,11 @@ export type TigerConfidence = "strong" | "reasonable" | "weak";
 
 export const confidenceLevels: TigerConfidence[] = ["weak", "reasonable", "strong"];
 
+/**
+ * Represents a single report from ck3tiger.
+ * It is not called an error, problem, etc. because besides errors, it also includes tips, untidy, warnings, etc.
+ * Each file can have multiple reports.
+ */
 export type TigerReport = {
     confidence: TigerConfidence;
     info: string | null;
@@ -25,5 +31,3 @@ export type TigerReport = {
     message: string;
     severity: TigerSeverity;
 };
-
-export type DiagnosticsByFile = { [filePath: string]: Diagnostic[] };
