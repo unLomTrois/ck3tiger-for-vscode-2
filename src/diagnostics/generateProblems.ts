@@ -2,11 +2,11 @@ import * as vscode from "vscode";
 import { getDiagnosticCollection } from "./collection";
 import { log, revealLog } from "../logger";
 import {
-    confidenceLevels,
     TigerReport,
-    TigerConfidence,
+    confidenceLevelMap,
     TigerLocation,
     TigerSeverity,
+    TigerConfidence,
 } from "../types";
 
 /**
@@ -40,15 +40,15 @@ function groupProblemsByFile(problems: TigerReport[]): Map<string, vscode.Diagno
 
     const config = vscode.workspace.getConfiguration("ck3tiger");
 
-    const minConfidence: TigerConfidence =
-        config.get<TigerConfidence>("minConfidence") ?? "weak";
+    const minConfidenceStr = config.get<TigerConfidence>("minConfidence", "weak");
+    const minConfidence = confidenceLevelMap[minConfidenceStr];
 
     for (const problem of problems) {
-        // Continue if problem's confidence is lower than minConfidence
-        if (
-            confidenceLevels.indexOf(problem.confidence) <
-            confidenceLevels.indexOf(minConfidence)
-        ) {
+        // Convert the string confidence to a number
+        const problemConfidence = confidenceLevelMap[problem.confidence];
+        
+        // Skip problems with lower confidence than our minimum
+        if (problemConfidence < minConfidence) {
             continue;
         }
 
@@ -75,7 +75,7 @@ function processProblemIntoDiagnostics(
 
         const primaryLocation = problem.locations[0];
         const primaryFilePath = primaryLocation.fullpath;
-
+        
         // Process the primary diagnostic
         const primaryDiagnostic = createDiagnostic(problem, primaryLocation);
         
@@ -150,7 +150,7 @@ function processRelatedLocations(
         subDiagnostic.severity = vscode.DiagnosticSeverity.Error;
         
         const subFilePath = subLocation.fullpath;
-
+        
         // Get existing diagnostics or create a new array
         const subDiagnostics = diagnosticsByFile.get(subFilePath) || [];
         subDiagnostics.push(subDiagnostic);

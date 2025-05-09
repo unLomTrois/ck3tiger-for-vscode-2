@@ -14,9 +14,14 @@ export type TigerLocation = {
 
 export type TigerSeverity = "tips" | "untidy" | "warning" | "error" | "fatal";
 
-export type TigerConfidence = "strong" | "reasonable" | "weak";
+export type TigerConfidence = "weak" | "reasonable" | "strong";
 
-export const confidenceLevels: TigerConfidence[] = ["weak", "reasonable", "strong"];
+// Map string values received from the API to our enum values
+export const confidenceLevelMap: Record<TigerConfidence, number> = {
+    "weak": 0,
+    "reasonable": 1,
+    "strong": 2
+};
 
 /**
  * Represents a single report from ck3tiger.
