@@ -95,6 +95,20 @@
                         "*strong* for confidence that the problem is real."
                     ],
                     "markdownDescription": "\nThe minimum confidence level for a problem to be reported.\n\nConfidence is how sure the validator is about a problem.\n\n- *weak* for likely false positives.\n- *reasonable* for most messages.\n- *strong* for confidence that the problem is real.\n\n**weak** is the default."
+                },
+                "ck3tiger.experimental.runOnSave": {
+                    "title": "Run ck3tiger on file save",
+                    "scope": "application",
+                    "type": "boolean",
+                    "default": false,
+                    "markdownDescription": "When enabled, automatically runs ck3tiger validation when a file is saved within the mod directory."
+                },
+                "ck3tiger.experimental.patterns": {
+                    "title": "File patterns to detect changes",
+                    "scope": "application",
+                    "type": "string",
+                    "default": "**/*.{txt,yml}",
+                    "markdownDescription": "A glob pattern for files to run ck3tiger on when a file is saved within the mod directory."
                 }
             }
         }

@@ -10,7 +10,9 @@ import { resetPathsCommand } from "./commands/resetPaths";
 import { updateCK3TigerCommand } from "./commands/updateCK3Tiger";
 import { openTigerPathCommand } from "./commands/openTigerPath";
 import { openCK3PathCommand } from "./commands/openCK3Path";
+import { getProblemsFromLogCommand } from "./commands/getProblemsFromLog";
 import { ContextContainer } from "./context";
+import { initFileWatcher } from "./utils/fileWatcher";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -30,6 +32,10 @@ export async function activate(context: vscode.ExtensionContext) {
     resetPathsCommand(context);
     openTigerPathCommand(context);
     openCK3PathCommand(context);
+    getProblemsFromLogCommand(context);
+    
+    // Initialize file watcher for the "Run on Save" feature
+    initFileWatcher(context);
 }
 
 // This method is called when your extension is deactivated
