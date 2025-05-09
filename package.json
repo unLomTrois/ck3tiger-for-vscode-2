@@ -51,6 +51,10 @@
             {
                 "command": "ck3tiger-for-vscode.getProblemsFromLog",
                 "title": "ck3tiger: Get problems from the log file (without running ck3tiger)"
+            },
+            {
+                "command": "ck3tiger-for-vscode.openTigerPath",
+                "title": "ck3tiger: Open Tiger Binary Location"
             }
         ],
         "configuration": {
