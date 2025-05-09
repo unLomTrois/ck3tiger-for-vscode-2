@@ -1,10 +1,13 @@
 import * as vscode from "vscode";
 import path from "path";
-import cp from "node:child_process";
+import { promisify } from "node:util";
+import { exec } from "node:child_process";
 import { checkConfiguration, getPaths } from "../config/configuration";
 import { generateProblems } from "../diagnostics/generateProblems";
 import { TigerReport } from "../types";
 import { log } from "../logger";
+
+const execAsync = promisify(exec);
 
 export function runCK3TigerCommand(context: vscode.ExtensionContext) {
     const disposable = vscode.commands.registerCommand(
@@ -49,42 +52,46 @@ async function handleTigerProgress(
 
     const logPath = getTigerLog(tigerPath);
 
-    await runCK3Tiger(tigerPath, ck3Path, modPath, logPath);
+    await runCK3TigerAsChildProcess(tigerPath, ck3Path, modPath, logPath);
 
     progress.report({
         message: "Loading tiger.json",
     });
 
-    const logData = await readTigerLog(logPath);
+    const tigerReports = await readTigerLog(logPath);
 
     progress.report({
         message: "Generating problems",
     });
 
-    generateProblems(logData);
+    generateProblems(tigerReports);
 }
 
-async function runCK3Tiger(
+async function runCK3TigerAsChildProcess(
     tigerPath: string,
     ck3Path: string,
     modPath: string,
     logPath: string
 ) {
     const command = `"${tigerPath}" --ck3 "${ck3Path}" --json "${modPath}" > "${logPath}"`;
-    await new Promise((resolve, reject) => {
-        cp.exec(command, (err, stdout) => {
-            if (err) {
-                reject(err);
-            }
-            resolve(stdout);
-        });
-    });
+    log(`Running ck3tiger:\n> ${command}\n`);
+    const { stdout, stderr } = await execAsync(command);
+
+    if (stdout) {
+        log(stdout);
+    }
+
+    if (stderr) {
+        log(stderr);
+    }
+
+    return stdout;
 }
 
 /**
  * Reads and parses the tiger.json log file
  * @param logPath Path to the tiger.json log file
- * @returns Parsed tiger report data
+ * @returns {TigerReport[]} Parsed tiger report data
  * @throws Error if the file cannot be read or parsed
  */
 async function readTigerLog(logPath: string): Promise<TigerReport[]> {
