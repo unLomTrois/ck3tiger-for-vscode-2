@@ -3,7 +3,7 @@ import path from "path";
 import { promisify } from "node:util";
 import { exec } from "node:child_process";
 import { checkConfiguration, getPaths } from "../config/configuration";
-import { generateDiagnostics } from "../diagnostics/generateProblems";
+import { generateDiagnostics } from "../diagnostics";
 import { TigerReport } from "../types";
 import { log } from "../logger";
 

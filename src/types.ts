@@ -1,3 +1,5 @@
+import * as vscode from "vscode";
+
 export type TigerLocation = {
     column: number;
     from: string;
@@ -18,6 +20,15 @@ export const confidenceLevelMap: Record<TigerConfidence, number> = {
     "weak": 0,
     "reasonable": 1,
     "strong": 2
+};
+
+// Map TigerSeverity values to VS Code DiagnosticSeverity
+export const severityMap: Record<TigerSeverity, vscode.DiagnosticSeverity> = {
+    "tips": vscode.DiagnosticSeverity.Hint,
+    "untidy": vscode.DiagnosticSeverity.Information,
+    "warning": vscode.DiagnosticSeverity.Warning,
+    "error": vscode.DiagnosticSeverity.Error,
+    "fatal": vscode.DiagnosticSeverity.Error
 };
 
 /**

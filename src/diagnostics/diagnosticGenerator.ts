@@ -1,12 +1,12 @@
 import * as vscode from "vscode";
-import { getDiagnosticCollection } from "./collection";
 import { log, revealLog } from "../logger";
+import { getDiagnosticCollection } from "./collection";
+import { createRangeFromTigerLocation } from "../utils/ranges";
+import { filterProblems } from "./filters";
 import {
     TigerReport,
-    TigerConfidence,
-    confidenceLevelMap,
     TigerLocation,
-    TigerSeverity,
+    severityMap
 } from "../types";
 
 /**
@@ -38,48 +38,6 @@ export function generateDiagnostics(problems: TigerReport[]): vscode.DiagnosticC
     }
 
     return diagnosticCollection;
-}
-
-function filterProblems(problems: TigerReport[]): TigerReport[] {
-    const filteredByConfidence = filterProblemsByConfidence(problems);
-    const filteredByKey = filterProblemsByKey(filteredByConfidence);
-
-    return filteredByKey;
-}
-
-/**
- * Filters problems based on their confidence level
- * @param problems Array of error entries from ck3tiger
- * @returns Filtered array of problems that meet the minimum confidence level
- */
-function filterProblemsByConfidence(problems: TigerReport[]): TigerReport[] {
-    const config = vscode.workspace.getConfiguration("ck3tiger");
-    const minConfidenceStr = config.get<TigerConfidence>("minConfidence", "weak");
-    const minConfidence = confidenceLevelMap[minConfidenceStr];
-
-    log("Filtering problems by minimum confidence level: ", minConfidenceStr);
-
-    const filteredByConfidence = problems.filter(problem => {
-        const problemConfidence = confidenceLevelMap[problem.confidence];
-        return problemConfidence >= minConfidence;
-    });
-
-    log("Remaining problems after confidence filter: ", filteredByConfidence.length);
-
-    return filteredByConfidence;
-}
-
-function filterProblemsByKey(problems: TigerReport[]): TigerReport[] {
-    log("Filtering problems by specific keys, skipping color problems");
-
-    return problems.filter(problem => {
-        // Skip color problems (not stable enough)
-        if (problem.key === "colors") {
-            return false;
-        }
-
-        return true;
-    });
 }
 
 /**
@@ -134,7 +92,7 @@ function processRelatedLocations(
         message: "from there!",
         location: {
             uri: vscode.Uri.file(location.fullpath),
-            range: createRangeFromLocation(location),
+            range: createRangeFromTigerLocation(location),
         },
     }));
     
@@ -147,7 +105,7 @@ function processRelatedLocations(
             message: "root",
             location: {
                 uri: vscode.Uri.file(primaryFilePath),
-                range: createRangeFromLocation(primaryLocation),
+                range: createRangeFromTigerLocation(primaryLocation),
             },
         }];
         
@@ -186,14 +144,15 @@ function createDiagnostic(
     problem: TigerReport,
     location: TigerLocation
 ): vscode.Diagnostic {
-    const range = createRangeFromLocation(location);
+    const range = createRangeFromTigerLocation(location);
 
     // add tip info if exists
     const message = problem.info
         ? `${problem.message}\ntip: ${problem.info}`
         : problem.message;
 
-    const severity = mapSeverityToDiagnosticSeverity(problem.severity);
+    // Get severity from the mapping
+    const severity = severityMap[problem.severity];
 
     // Create a diagnostic for the current problem
     const diagnostic = new vscode.Diagnostic(range, message, severity);
@@ -201,51 +160,4 @@ function createDiagnostic(
     diagnostic.code = `${problem.confidence} ${problem.key}`;
 
     return diagnostic;
-}
-
-/**
- * Creates a VS Code Range from a ck3tiger location
- * Handles cases where line numbers or columns are null (file-level errors)
- * @param location The location information from ck3tiger
- * @returns A VS Code Range object pointing to the appropriate position
- */
-function createRangeFromLocation(location: TigerLocation): vscode.Range {
-    // if error is for the whole file (like encoding errors, match the whole first line)
-    if (location.linenr === null || location.column === null) {
-        // Returning a default range of (0, 0) to (0, 1) to indicate an unspecified location.
-        // This helps distinguish it from a genuine empty range.
-        return new vscode.Range(0, 0, 0, 1);
-    }
-
-    const start = new vscode.Position(location.linenr - 1, location.column - 1);
-
-    const end = new vscode.Position(
-        location.linenr - 1,
-        location.length
-            ? location.column - 1 + location.length
-            : location.line.length
-    );
-
-    return new vscode.Range(start, end);
-}
-
-/**
- * Maps ck3tiger severity levels to VS Code diagnostic severity levels
- * @param severity The severity level from ck3tiger
- * @returns The appropriate VS Code DiagnosticSeverity
- */
-function mapSeverityToDiagnosticSeverity(severity: TigerSeverity): vscode.DiagnosticSeverity {
-    switch (severity) {
-        case "tips":
-            return vscode.DiagnosticSeverity.Hint;
-        case "untidy":
-            return vscode.DiagnosticSeverity.Information;
-        case "warning":
-            return vscode.DiagnosticSeverity.Warning;
-        case "error":
-        case "fatal":
-            return vscode.DiagnosticSeverity.Error;
-        default:
-            return vscode.DiagnosticSeverity.Error;
-    }
-}
+} 
