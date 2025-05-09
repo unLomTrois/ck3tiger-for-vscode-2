@@ -1,6 +1,3 @@
-import type { Diagnostic } from "vscode";
-import * as vscode from "vscode";
-
 export type TigerLocation = {
     column: number;
     from: string;

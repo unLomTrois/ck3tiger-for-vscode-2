@@ -3,7 +3,7 @@ import path from "path";
 import { promisify } from "node:util";
 import { exec } from "node:child_process";
 import { checkConfiguration, getPaths } from "../config/configuration";
-import { generateProblems } from "../diagnostics/generateProblems";
+import { generateDiagnostics } from "../diagnostics/generateProblems";
 import { TigerReport } from "../types";
 import { log } from "../logger";
 
@@ -67,7 +67,7 @@ async function executeValidationWithProgress(
     const tigerReports = await parseTigerLogFile(tigerLogPath);
 
     progress.report({ message: "Generating problems" });
-    generateProblems(tigerReports);
+    generateDiagnostics(tigerReports);
 }
 
 /**

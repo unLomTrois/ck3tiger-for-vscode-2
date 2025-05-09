@@ -3,25 +3,35 @@ import { getDiagnosticCollection } from "./collection";
 import { log, revealLog } from "../logger";
 import {
     TigerReport,
+    TigerConfidence,
     confidenceLevelMap,
     TigerLocation,
     TigerSeverity,
-    TigerConfidence,
 } from "../types";
 
 /**
  * Generates VS Code diagnostics from ck3tiger validation results
- * @param logData The parsed JSON output from ck3tiger
+ * @param problems The parsed JSON output from ck3tiger
  * @returns The diagnostic collection with errors mapped to files
  */
-export function generateProblems(logData: TigerReport[]): vscode.DiagnosticCollection {
-    const diagnosticCollection = getDiagnosticCollection();
+export function generateDiagnostics(problems: TigerReport[]): vscode.DiagnosticCollection {
+    log("Generating diagnostics for ", problems.length, " problems");
 
-    diagnosticCollection.clear();
+    // Filter problems by confidence level
+    const filteredProblems = filterProblems(problems);
+    log("Remaining problems: ", filteredProblems.length);
 
-    const diagnosticsByFile = groupProblemsByFile(logData);
-
+    // Create a map to collect diagnostics by file
+    const diagnosticsByFile = new Map<string, vscode.Diagnostic[]>();
+    
+    // Process each problem into diagnostics
+    for (const problem of filteredProblems) {
+        processProblemIntoDiagnostics(problem, diagnosticsByFile);
+    }
+    
     // Update the diagnostic collection for each file
+    const diagnosticCollection = getDiagnosticCollection();
+    diagnosticCollection.clear();
     for (const [filePath, diagnostics] of diagnosticsByFile) {
         const fileUri = vscode.Uri.file(filePath);
         diagnosticCollection.set(fileUri, diagnostics);
@@ -30,32 +40,46 @@ export function generateProblems(logData: TigerReport[]): vscode.DiagnosticColle
     return diagnosticCollection;
 }
 
+function filterProblems(problems: TigerReport[]): TigerReport[] {
+    const filteredByConfidence = filterProblemsByConfidence(problems);
+    const filteredByKey = filterProblemsByKey(filteredByConfidence);
+
+    return filteredByKey;
+}
+
 /**
- * Groups problems by file path and filters by confidence level
+ * Filters problems based on their confidence level
  * @param problems Array of error entries from ck3tiger
- * @returns Map of file paths to arrays of diagnostics
+ * @returns Filtered array of problems that meet the minimum confidence level
  */
-function groupProblemsByFile(problems: TigerReport[]): Map<string, vscode.Diagnostic[]> {
-    const diagnosticsByFile = new Map<string, vscode.Diagnostic[]>();
-
+function filterProblemsByConfidence(problems: TigerReport[]): TigerReport[] {
     const config = vscode.workspace.getConfiguration("ck3tiger");
-
     const minConfidenceStr = config.get<TigerConfidence>("minConfidence", "weak");
     const minConfidence = confidenceLevelMap[minConfidenceStr];
 
-    for (const problem of problems) {
-        // Convert the string confidence to a number
+    log("Filtering problems by minimum confidence level: ", minConfidenceStr);
+
+    const filteredByConfidence = problems.filter(problem => {
         const problemConfidence = confidenceLevelMap[problem.confidence];
-        
-        // Skip problems with lower confidence than our minimum
-        if (problemConfidence < minConfidence) {
-            continue;
+        return problemConfidence >= minConfidence;
+    });
+
+    log("Remaining problems after confidence filter: ", filteredByConfidence.length);
+
+    return filteredByConfidence;
+}
+
+function filterProblemsByKey(problems: TigerReport[]): TigerReport[] {
+    log("Filtering problems by specific keys, skipping color problems");
+
+    return problems.filter(problem => {
+        // Skip color problems (not stable enough)
+        if (problem.key === "colors") {
+            return false;
         }
 
-        processProblemIntoDiagnostics(problem, diagnosticsByFile);
-    }
-
-    return diagnosticsByFile;
+        return true;
+    });
 }
 
 /**
@@ -69,10 +93,6 @@ function processProblemIntoDiagnostics(
     diagnosticsByFile: Map<string, vscode.Diagnostic[]>
 ): void {
     try {
-        if (shouldSkipProblem(problem)) {
-            return;
-        }
-
         const primaryLocation = problem.locations[0];
         const primaryFilePath = primaryLocation.fullpath;
         
@@ -91,22 +111,6 @@ function processProblemIntoDiagnostics(
     } catch (error) {
         handleProcessingError(error, problem);
     }
-}
-
-/**
- * Determines if a problem should be skipped based on certain criteria
- * @param problem The problem to evaluate
- * @returns True if the problem should be skipped, false otherwise
- */
-function shouldSkipProblem(problem: TigerReport): boolean {
-    // Skip color problems (not stable enough)
-    if (problem.key === "colors") {
-        console.log("Skipping problem with key 'colors'");
-        console.log(problem);
-        return true;
-    }
-    
-    return false;
 }
 
 /**
