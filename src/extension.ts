@@ -9,6 +9,7 @@ import { runCK3TigerCommand } from "./commands/runCK3Tiger";
 import { resetPathsCommand } from "./commands/resetPaths";
 import { updateCK3TigerCommand } from "./commands/updateCK3Tiger";
 import { openTigerPathCommand } from "./commands/openTigerPath";
+import { openCK3PathCommand } from "./commands/openCK3Path";
 import { ContextContainer } from "./context";
 
 // This method is called when your extension is activated
@@ -28,6 +29,7 @@ export async function activate(context: vscode.ExtensionContext) {
     updateCK3TigerCommand(context);
     resetPathsCommand(context);
     openTigerPathCommand(context);
+    openCK3PathCommand(context);
 }
 
 // This method is called when your extension is deactivated

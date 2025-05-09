@@ -55,6 +55,10 @@
             {
                 "command": "ck3tiger-for-vscode.openTigerPath",
                 "title": "ck3tiger: Open Tiger Binary Location"
+            },
+            {
+                "command": "ck3tiger-for-vscode.openCK3Path",
+                "title": "ck3tiger: Open CK3 Game Folder"
             }
         ],
         "configuration": {
