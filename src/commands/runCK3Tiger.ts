@@ -4,7 +4,7 @@ import { promisify } from "node:util";
 import { exec } from "node:child_process";
 import { checkConfiguration, getPaths } from "../config/configuration";
 import { generateDiagnostics } from "../diagnostics";
-import { TigerReport } from "../types";
+import { TigerReport, VscodeProgress } from "../types";
 import { log } from "../logger";
 
 const execAsync = promisify(exec);
@@ -40,10 +40,7 @@ async function displayValidationProgressUI() {
 }
 
 async function executeValidationWithProgress(
-    progress: vscode.Progress<{
-        message?: string;
-        increment?: number;
-    }>
+    progress: VscodeProgress
 ) {
     progress.report({ message: "Getting paths" });
 

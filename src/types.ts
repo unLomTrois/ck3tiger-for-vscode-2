@@ -44,3 +44,5 @@ export type TigerReport = {
     message: string;
     severity: TigerSeverity;
 };
+
+export type VscodeProgress = vscode.Progress<{ message?: string; increment?: number; }>;

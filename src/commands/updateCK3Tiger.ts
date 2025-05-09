@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import cp from "node:child_process";
 import { checkConfiguration, getPaths } from "../config/configuration";
 import { log, logError, revealLog } from "../logger";
+import { VscodeProgress } from "../types";
 
 export function updateCK3TigerCommand(context: vscode.ExtensionContext) {
     const disposable = vscode.commands.registerCommand(
@@ -19,9 +20,7 @@ export function updateCK3TigerCommand(context: vscode.ExtensionContext) {
     context.subscriptions.push(disposable);
 }
 
-type Progress = vscode.Progress<{ message?: string; increment?: number }>;
-
-async function handleUpdateTigerProgress(progress: Progress) {
+async function handleUpdateTigerProgress(progress: VscodeProgress) {
     try {
         const { tigerPath } = await getPaths();
 
@@ -41,7 +40,7 @@ async function handleUpdateTigerProgress(progress: Progress) {
     }
 }
 
-async function updateCK3Tiger(tigerPath: string, progress: Progress) {
+async function updateCK3Tiger(tigerPath: string, progress: VscodeProgress) {
     const command = `${tigerPath}`;
     const args = ["update"];
 
