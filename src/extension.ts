@@ -12,7 +12,7 @@ import { openTigerPathCommand } from "./commands/openTigerPath";
 import { openCK3PathCommand } from "./commands/openCK3Path";
 import { getProblemsFromLogCommand } from "./commands/getProblemsFromLog";
 import { ContextContainer } from "./context";
-import { initFileWatcher } from "./utils/fileWatcher";
+import { initFileWatcher } from "./fileWatcher/fileWatcher";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
