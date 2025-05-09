@@ -10,9 +10,9 @@ export function initDiagnosticCollection(): vscode.DiagnosticCollection {
 }
 
 export function getDiagnosticCollection(): vscode.DiagnosticCollection {
-    if (globalDiagnosticCollection) {
-        return globalDiagnosticCollection;
+    if (!globalDiagnosticCollection) {
+        return initDiagnosticCollection();
     }
 
-    return initDiagnosticCollection();
+    return globalDiagnosticCollection;
 }
