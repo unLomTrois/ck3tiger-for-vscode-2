@@ -113,7 +113,7 @@ async function fetchLatestRelease(octokit: any): Promise<any | undefined> {
     try {
         const response = await octokit.request("GET /repos/{owner}/{repo}/releases/latest", {
             owner: "amtep",
-            repo: "ck3-tiger",
+            repo: "tiger", // amtep renamed "ck3-tiger" to "tiger" :(
             headers: {
                 "X-GitHub-Api-Version": "2022-11-28",
             },
