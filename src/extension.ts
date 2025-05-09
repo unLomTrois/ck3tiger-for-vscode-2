@@ -36,6 +36,17 @@ export async function activate(context: vscode.ExtensionContext) {
     
     // Initialize file watcher for the "Run on Save" feature
     initFileWatcher(context);
+
+    afterStartup(context);
+}
+
+async function afterStartup(context: vscode.ExtensionContext) {
+    const config = vscode.workspace.getConfiguration("ck3tiger");
+
+    const openPreviousLogOnStartup = config.get("openPreviousLogOnStartup");
+    if (openPreviousLogOnStartup) {
+        await vscode.commands.executeCommand("ck3tiger-for-vscode.getProblemsFromLog");
+    }
 }
 
 // This method is called when your extension is deactivated
