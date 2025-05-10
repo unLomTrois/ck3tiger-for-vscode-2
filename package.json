@@ -17,6 +17,10 @@
         "type": "git",
         "url": "https://github.com/unLomTrois/ck3tiger-for-vscode-2"
     },
+    "bugs": {
+        "url": "https://github.com/unLomTrois/ck3tiger-for-vscode-2/issues"
+    },
+    "homepage": "https://github.com/unLomTrois/ck3tiger-for-vscode-2",
     "categories": [
         "Other",
         "Programming Languages",
