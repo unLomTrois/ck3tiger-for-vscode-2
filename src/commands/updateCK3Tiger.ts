@@ -28,19 +28,22 @@ async function handleUpdateTigerProgress(progress: VscodeProgress) {
         progress.report({ message: "Updating ck3tiger...", increment: 10 });
 
         await executeTigerUpdate(tigerPath, progress);
-    } catch (error: any) {
-        log(`Failed to update ck3tiger: ${error.message || error}`);
-        vscode.window.showErrorMessage("Failed to update ck3tiger...");
+        
+        vscode.window.showInformationMessage("CK3Tiger update completed successfully");
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        log(`Failed to update ck3tiger: ${errorMessage}`);
+        vscode.window.showErrorMessage(`Failed to update ck3tiger: ${errorMessage}`);
     }
 }
 
-async function executeTigerUpdate(tigerPath: string, progress: VscodeProgress) {
+async function executeTigerUpdate(tigerPath: string, progress: VscodeProgress): Promise<void> {
     const command = `${tigerPath}`;
     const args = ["update"];
-
-    return new Promise<void>((resolve, reject) => {
-        const child = cp.spawn(command, args, { shell: true });
-
+    
+    const child = cp.spawn(command, args, { shell: true, stdio: 'pipe' });
+    
+    if (child.stdout) {
         child.stdout.on("data", async (data) => {
             const output = data.toString();
             log(output);
@@ -50,28 +53,26 @@ async function executeTigerUpdate(tigerPath: string, progress: VscodeProgress) {
             }
 
             if (output.includes("Do you want to continue?")) {
-                const userAnswer = await vscode.window.showInformationMessage(
-                    "The new release will be downloaded/extracted and the existing binary will be replaced.",
-                    "Yes",
-                    "No"
-                );
-
-                if (userAnswer === "Yes") {
-                    child.stdin.write("y\n");
-                } else {
-                    child.stdin.write("n\n");
+                const userChoice = await promptForConfirmation();
+                if (child.stdin) {
+                    child.stdin.write(`${userChoice ? 'y' : 'n'}\n`);
                 }
             }
         });
+    }
 
+    if (child.stderr) {
         child.stderr.on("data", (data) => {
             const message = data.toString();
             logError(message, `Error: ${message}`);
         });
-
+    }
+    
+    // Convert the event-based process to a Promise
+    return new Promise<void>((resolve, reject) => {
         child.on("close", (code) => {
             if (code !== 0) {
-                reject(new Error(`Update process exited with code ${code}`));
+                reject(new Error(`Process exited with code ${code}`));
             } else {
                 progress.report({
                     increment: 100,
@@ -80,5 +81,19 @@ async function executeTigerUpdate(tigerPath: string, progress: VscodeProgress) {
                 resolve();
             }
         });
+        
+        child.on("error", (err) => {
+            reject(err);
+        });
     });
+}
+
+async function promptForConfirmation(): Promise<boolean> {
+    const userAnswer = await vscode.window.showInformationMessage(
+        "The new release will be downloaded/extracted and the existing binary will be replaced.",
+        "Yes",
+        "No"
+    );
+    
+    return userAnswer === "Yes";
 }
