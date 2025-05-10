@@ -5,10 +5,6 @@ import { log } from "../logger";
 import { getTigerLogPath, parseTigerLogFile } from "../utils/tigerLog";
 
 export function getProblemsFromLog() {
-    displayGetProblemsProgressUI();
-}
-
-async function displayGetProblemsProgressUI() {
     vscode.window.withProgress(
         {
             location: vscode.ProgressLocation.Window,

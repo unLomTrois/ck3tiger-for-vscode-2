@@ -8,7 +8,7 @@ export function updateCK3Tiger() {
     vscode.window.withProgress(
         {
             location: vscode.ProgressLocation.Notification,
-            title: "ck3tiger update",
+            title: "Updating ck3tiger...",
             cancellable: true,
         },
         handleUpdateTigerProgress

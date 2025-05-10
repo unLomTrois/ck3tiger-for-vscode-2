@@ -10,10 +10,6 @@ import { getTigerLogPath, parseTigerLogFile } from "../utils/tigerLog";
 const execAsync = promisify(exec);
 
 export function runCK3Tiger() {
-    displayValidationProgressUI();
-}
-
-async function displayValidationProgressUI() {
     vscode.window.withProgress(
         {
             location: vscode.ProgressLocation.Window,
