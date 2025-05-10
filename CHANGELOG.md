@@ -6,12 +6,16 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
-- "Check for updates on startup" option to automatically check for ck3tiger updates when the extension starts
+## [1.1.2] - 2024-05-13
+
+### Improved
+- Enhanced reliability of the tiger update process
 
 ## [1.1.1] - 2025-05-10
 
 ### Added
 - "Report a Bug" command to quickly open GitHub issues page
+- Check for updates on startup option to automatically check for ck3tiger updates when the extension starts
 
 ## [1.1.0] - 2025-05-09
 
