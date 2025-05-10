@@ -6,7 +6,19 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
-- Initial release
+## [1.1.1] - 2025-05-10
+
+### Added
+- "Report a Bug" command to quickly open GitHub issues page
+
+## [1.1.0] - 2025-05-09
+
+### Added
+
+- Option to open previous log on startup
+- Automatic validation on file save (experimental feature)
+- Command to open CK3 game folder in file explorer
+- Command to open Tiger binary location in file explorer
 
 ## [1.0.7] - 2024-11-07
 
