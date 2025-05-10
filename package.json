@@ -120,6 +120,13 @@
                     "type": "boolean",
                     "default": false,
                     "markdownDescription": "When enabled, automatically generates problems from the previous log file on startup."
+                },
+                "ck3tiger.checkUpdatesOnStartup": {
+                    "title": "Check for updates on startup",
+                    "scope": "application",
+                    "type": "boolean",
+                    "default": false,
+                    "markdownDescription": "When enabled, automatically checks for ck3tiger updates when the extension starts."
                 }
             }
         }

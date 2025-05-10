@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import cp from "node:child_process";
 import { checkConfiguration, getPaths } from "../config/configuration";
-import { log, logError, revealLog } from "../logger";
+import { log, logError } from "../logger";
 import { VscodeProgress } from "../types";
 
 export function updateCK3TigerCommand(context: vscode.ExtensionContext) {
@@ -29,7 +29,6 @@ async function handleUpdateTigerProgress(progress: VscodeProgress) {
             return;
         }
 
-        revealLog();
         log("Updating ck3-tiger...");
         progress.report({ message: "Updating ck3tiger...", increment: 10 });
 

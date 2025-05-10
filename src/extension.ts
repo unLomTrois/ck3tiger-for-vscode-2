@@ -49,6 +49,12 @@ async function afterStartup(context: vscode.ExtensionContext) {
     if (openPreviousLogOnStartup) {
         await vscode.commands.executeCommand("ck3tiger-for-vscode.getProblemsFromLog");
     }
+    
+    const checkUpdatesOnStartup = config.get("checkUpdatesOnStartup");
+    if (checkUpdatesOnStartup) {
+        log("Checking for ck3tiger updates on startup");
+        await vscode.commands.executeCommand("ck3tiger-for-vscode.updateCk3tiger");
+    }
 }
 
 // This method is called when your extension is deactivated
