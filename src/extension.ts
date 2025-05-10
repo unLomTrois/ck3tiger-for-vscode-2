@@ -11,6 +11,7 @@ import { updateCK3TigerCommand } from "./commands/updateCK3Tiger";
 import { openTigerPathCommand } from "./commands/openTigerPath";
 import { openCK3PathCommand } from "./commands/openCK3Path";
 import { getProblemsFromLogCommand } from "./commands/getProblemsFromLog";
+import { reportBugCommand } from "./commands/reportBug";
 import { ContextContainer } from "./context";
 import { initFileWatcher } from "./fileWatcher/fileWatcher";
 
@@ -33,6 +34,7 @@ export async function activate(context: vscode.ExtensionContext) {
     openTigerPathCommand(context);
     openCK3PathCommand(context);
     getProblemsFromLogCommand(context);
+    reportBugCommand(context);
     
     // Initialize file watcher for the "Run on Save" feature
     initFileWatcher(context);
