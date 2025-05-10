@@ -4,19 +4,6 @@ import * as vscode from "vscode";
 import { log } from "../logger";
 
 /**
- * Registers the command to open the CK3 folder.
- * @param {vscode.ExtensionContext} context - The extension context.
- */
-export function openCK3PathCommand(context: vscode.ExtensionContext): void {
-    const disposable = vscode.commands.registerCommand(
-        "ck3tiger-for-vscode.openCK3Path",
-        openCK3Path
-    );
-
-    context.subscriptions.push(disposable);
-}
-
-/**
  * Opens the CK3 game folder in file explorer.
  * @returns {Promise<void>}
  */

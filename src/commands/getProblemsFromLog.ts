@@ -4,13 +4,8 @@ import { generateDiagnostics } from "../diagnostics";
 import { log } from "../logger";
 import { getTigerLogPath, parseTigerLogFile } from "../utils/tigerLog";
 
-export function getProblemsFromLogCommand(context: vscode.ExtensionContext) {
-    const disposable = vscode.commands.registerCommand(
-        "ck3tiger-for-vscode.getProblemsFromLog",
-        displayGetProblemsProgressUI
-    );
-
-    context.subscriptions.push(disposable);
+export function getProblemsFromLog() {
+    displayGetProblemsProgressUI();
 }
 
 async function displayGetProblemsProgressUI() {

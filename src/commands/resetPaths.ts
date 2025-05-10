@@ -1,15 +1,19 @@
 import * as vscode from "vscode";
+import { log } from "../logger";
+import { checkConfiguration } from "../config/configuration";
 
-import { checkConfiguration, resetPaths } from "../config/configuration";
+export async function resetPaths(): Promise<void> {
+    log("Resetting paths");
 
-export function resetPathsCommand(context: vscode.ExtensionContext): void {
-    const disposable = vscode.commands.registerCommand(
-        "ck3tiger-for-vscode.resetPaths",
-        async () => {
-            await resetPaths();
-            await checkConfiguration();
-        }
-    );
+    const config = vscode.workspace.getConfiguration("ck3tiger");
 
-    context.subscriptions.push(disposable);
+    const target = vscode.ConfigurationTarget.Global;
+
+    await Promise.all([
+        config.update("tigerPath", undefined, target),
+        config.update("ck3Path", undefined, target),
+        config.update("modPath", undefined, target),
+    ]);
+
+    await checkConfiguration();
 }

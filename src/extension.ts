@@ -5,22 +5,16 @@ import * as vscode from "vscode";
 import { initLogger, log } from "./logger";
 import { checkConfiguration } from "./config/configuration";
 import { initStatusBarButton } from "./statusBar";
-import { resetPathsCommand } from "./commands/resetPaths";
-import { updateCK3TigerCommand } from "./commands/updateCK3Tiger";
-import { openTigerPathCommand } from "./commands/openTigerPath";
-import { openCK3PathCommand } from "./commands/openCK3Path";
-import { getProblemsFromLogCommand } from "./commands/getProblemsFromLog";
-import { reportBugCommand } from "./commands/reportBug";
 import { ContextContainer } from "./context";
 import { initFileWatcher } from "./fileWatcher/fileWatcher";
-import { createRegisterCommand, runCK3Tiger } from "./commands";
+import * as commands from "./commands";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext) {
     ContextContainer.context = context;
 
-    const registerCommand = createRegisterCommand(context);
+    const registerCommand = commands.createRegisterCommand(context);
 
     initLogger();
 
@@ -30,14 +24,13 @@ export async function activate(context: vscode.ExtensionContext) {
 
     initStatusBarButton(context);
 
-    registerCommand("ck3tiger-for-vscode.runCk3tiger", runCK3Tiger);
-
-    updateCK3TigerCommand(context);
-    resetPathsCommand(context);
-    openTigerPathCommand(context);
-    openCK3PathCommand(context);
-    getProblemsFromLogCommand(context);
-    reportBugCommand(context);
+    registerCommand("ck3tiger-for-vscode.runCk3tiger", commands.runCK3Tiger);
+    registerCommand("ck3tiger-for-vscode.updateCk3tiger", commands.updateCK3Tiger);
+    registerCommand("ck3tiger-for-vscode.resetPaths", commands.resetPaths);
+    registerCommand("ck3tiger-for-vscode.openTigerPath", commands.openTigerPath);
+    registerCommand("ck3tiger-for-vscode.openCK3Path", commands.openCK3Path);
+    registerCommand("ck3tiger-for-vscode.getProblemsFromLog", commands.getProblemsFromLog);
+    registerCommand("ck3tiger-for-vscode.reportBug", commands.reportBug);
 
     // Initialize file watcher for the "Run on Save" feature
     initFileWatcher(context);

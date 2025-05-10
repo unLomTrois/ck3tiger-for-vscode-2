@@ -4,20 +4,15 @@ import { checkConfiguration, getPaths } from "../config/configuration";
 import { log, logError } from "../logger";
 import { VscodeProgress } from "../types";
 
-export function updateCK3TigerCommand(context: vscode.ExtensionContext) {
-    const disposable = vscode.commands.registerCommand(
-        "ck3tiger-for-vscode.updateCk3tiger",
-        () =>
-            vscode.window.withProgress(
-                {
-                    location: vscode.ProgressLocation.Notification,
-                    title: "ck3tiger update",
-                    cancellable: true,
-                },
-                handleUpdateTigerProgress
-            )
+export function updateCK3Tiger() {
+    vscode.window.withProgress(
+        {
+            location: vscode.ProgressLocation.Notification,
+            title: "ck3tiger update",
+            cancellable: true,
+        },
+        handleUpdateTigerProgress
     );
-    context.subscriptions.push(disposable);
 }
 
 async function handleUpdateTigerProgress(progress: VscodeProgress) {
@@ -32,14 +27,14 @@ async function handleUpdateTigerProgress(progress: VscodeProgress) {
         log("Updating ck3-tiger...");
         progress.report({ message: "Updating ck3tiger...", increment: 10 });
 
-        await updateCK3Tiger(tigerPath, progress);
+        await executeTigerUpdate(tigerPath, progress);
     } catch (error: any) {
         log(`Failed to update ck3tiger: ${error.message || error}`);
         vscode.window.showErrorMessage("Failed to update ck3tiger...");
     }
 }
 
-async function updateCK3Tiger(tigerPath: string, progress: VscodeProgress) {
+async function executeTigerUpdate(tigerPath: string, progress: VscodeProgress) {
     const command = `${tigerPath}`;
     const args = ["update"];
 

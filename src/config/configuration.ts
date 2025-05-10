@@ -33,28 +33,3 @@ export async function getPaths() {
         modPath,
     };
 }
-
-/**
- * Reset the paths in the global configuration.
- */
-export async function resetPaths() {
-    log("Resetting paths");
-
-    const config = vscode.workspace.getConfiguration("ck3tiger");
-
-    await config.update(
-        "tigerPath",
-        undefined,
-        vscode.ConfigurationTarget.Global
-    );
-    await config.update(
-        "ck3Path",
-        undefined,
-        vscode.ConfigurationTarget.Global
-    );
-    await config.update(
-        "modPath",
-        undefined,
-        vscode.ConfigurationTarget.Global
-    );
-}

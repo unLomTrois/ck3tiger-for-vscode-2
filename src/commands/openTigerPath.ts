@@ -4,19 +4,6 @@ import * as vscode from "vscode";
 import { log } from "../logger";
 
 /**
- * Registers the command to open the tiger path.
- * @param {vscode.ExtensionContext} context - The extension context.
- */
-export function openTigerPathCommand(context: vscode.ExtensionContext): void {
-    const disposable = vscode.commands.registerCommand(
-        "ck3tiger-for-vscode.openTigerPath",
-        openTigerPath
-    );
-
-    context.subscriptions.push(disposable);
-}
-
-/**
  * Opens the tiger binary location in file explorer.
  * @returns {Promise<void>}
  */

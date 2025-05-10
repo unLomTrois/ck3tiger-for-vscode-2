@@ -1,11 +1,12 @@
 import * as vscode from "vscode";
 
 export { runCK3Tiger } from "./runCK3Tiger";
-export { updateCK3TigerCommand } from "./updateCK3Tiger";
-export { resetPathsCommand } from "./resetPaths";
-export { openTigerPathCommand } from "./openTigerPath";
-export { openCK3PathCommand } from "./openCK3Path";
-export { getProblemsFromLogCommand } from "./getProblemsFromLog";
+export { updateCK3Tiger } from "./updateCK3Tiger";
+export { resetPaths } from "./resetPaths";
+export { openTigerPath } from "./openTigerPath";
+export { openCK3Path } from "./openCK3Path";
+export { getProblemsFromLog } from "./getProblemsFromLog";
+export { reportBug } from "./reportBug";
 
 export function createRegisterCommand(ctx: vscode.ExtensionContext) {
     return function registerCommand(name: string, fn: () => void) {
