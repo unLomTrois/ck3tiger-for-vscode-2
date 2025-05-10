@@ -9,13 +9,8 @@ import { getTigerLogPath, parseTigerLogFile } from "../utils/tigerLog";
 
 const execAsync = promisify(exec);
 
-export function runCK3TigerCommand(context: vscode.ExtensionContext) {
-    const disposable = vscode.commands.registerCommand(
-        "ck3tiger-for-vscode.runCk3tiger",
-        displayValidationProgressUI
-    );
-
-    context.subscriptions.push(disposable);
+export function runCK3Tiger() {
+    displayValidationProgressUI();
 }
 
 async function displayValidationProgressUI() {
