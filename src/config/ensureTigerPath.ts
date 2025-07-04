@@ -15,13 +15,12 @@ export async function ensureTigerPath(
     config: vscode.WorkspaceConfiguration
 ): Promise<void> {
     const tigerPath = config.get<string>("tigerPath");
-    const gameTag = config.get<string>("gameTag");
 
     if (tigerPath) {
         return;
     }
 
-    const newPath = await promptForTigerPath(gameTag);
+    const newPath = await promptForTigerPath();
 
     if (newPath) {
         await updateTigerPath(config, newPath);
@@ -36,19 +35,19 @@ export async function ensureTigerPath(
  * Prompt the user to set the tiger path.
  * @returns {Promise<string | undefined>} The selected tiger path, or undefined if the user cancels.
  */
-async function promptForTigerPath(gameTag: string | undefined): Promise<string | undefined> {
+async function promptForTigerPath(): Promise<string | undefined> {
     const userChoice = await vscode.window.showInformationMessage(
-        `🐯 How do you want to setup ${gameTag}-tiger? (If you don't know, click 'Download it for me')`,
+        "🐯 How do you want to setup ck3-tiger? (If you don't know, click 'Download it for me')",
         "Download it for me",
-        `Set up the path to ${gameTag}-tiger executable manually`
+        "Set up the path to ck3-tiger executable manually"
     );
 
     if (userChoice === "Download it for me") {
         vscode.window.showInformationMessage(
-            `🐯 Downloading ${gameTag}-tiger for you. Please wait...`
+            "🐯 Downloading ck3-tiger for you. Please wait..."
         );
 
-        const downloadedPath = await downloadTiger(gameTag);
+        const downloadedPath = await downloadTiger();
 
         if (downloadedPath) {
             return downloadedPath;
@@ -56,7 +55,7 @@ async function promptForTigerPath(gameTag: string | undefined): Promise<string |
     }
 
     const manualSelection = await vscode.window.showInformationMessage(
-        `🐯 Let's find your ${gameTag}tiger binary!`,
+        "🐯 Let's find your ck3tiger binary!",
         "Open",
         "Cancel"
     );
@@ -69,10 +68,10 @@ async function promptForTigerPath(gameTag: string | undefined): Promise<string |
 }
 
 /**
- * Download the latest version of the required version of Tiger from GitHub.
+ * Download the latest version of ck3-tiger from GitHub.
  * @returns {Promise<string | undefined>} The path to the downloaded executable, or undefined if download failed.
  */
-async function downloadTiger(gameTag: string | undefined): Promise<string | undefined> {
+async function downloadTiger(): Promise<string | undefined> {
     try {
         const { Octokit } = await import("@octokit/core");
         const octokit = new Octokit();
@@ -89,18 +88,18 @@ async function downloadTiger(gameTag: string | undefined): Promise<string | unde
             return undefined;
         }
 
-        const assetInfo = findPlatformAsset(latestRelease.assets, platform, gameTag);
+        const assetInfo = findPlatformAsset(latestRelease.assets, platform);
         if (!assetInfo) {
-            vscode.window.showErrorMessage(`No ${gameTag}-tiger binary found for your platform`);
+            vscode.window.showErrorMessage("No ck3-tiger binary found for your platform");
             return undefined;
         }
 
         const { downloadUrl } = assetInfo;
-        return await downloadAndExtractTiger(downloadUrl, platform, gameTag);
+        return await downloadAndExtractTiger(downloadUrl, platform);
     } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         log(`Error downloading tiger: ${errorMessage}`);
-        vscode.window.showErrorMessage(`Failed to download ${gameTag}-tiger: ${errorMessage}`);
+        vscode.window.showErrorMessage(`Failed to download ck3-tiger: ${errorMessage}`);
         return undefined;
     }
 }
@@ -134,14 +133,14 @@ async function fetchLatestRelease(octokit: any): Promise<any | undefined> {
  * @param {NodeJS.Platform} platform - The current platform.
  * @returns {Object | undefined} Object containing download URL or undefined if not found.
  */
-function findPlatformAsset(assets: any[], platform: NodeJS.Platform, gameTag: string | undefined): { downloadUrl: string } | undefined {
+function findPlatformAsset(assets: any[], platform: NodeJS.Platform): { downloadUrl: string } | undefined {
     revealLog();
     log("Latest release assets:");
-    log(JSON.stringify(assets.filter(asset => asset.name.includes(gameTag)), null, 4));
+    log(JSON.stringify(assets.filter(asset => asset.name.includes("ck3")), null, 4));
 
     const platformName = platform === "win32" ? "windows" : "linux";
     const currentAsset = assets.find((asset) => 
-        asset.name.includes(gameTag) && asset.name.includes(platformName)
+        asset.name.includes("ck3") && asset.name.includes(platformName)
     );
     
     if (!currentAsset) {
@@ -157,23 +156,23 @@ function findPlatformAsset(assets: any[], platform: NodeJS.Platform, gameTag: st
  * @param {NodeJS.Platform} platform - The current platform.
  * @returns {Promise<string | undefined>} The path to the extracted executable.
  */
-async function downloadAndExtractTiger(downloadUrl: string, platform: NodeJS.Platform, gameTag: string | undefined): Promise<string | undefined> {
+async function downloadAndExtractTiger(downloadUrl: string, platform: NodeJS.Platform): Promise<string | undefined> {
     const context = ContextContainer.context;
-    const tigerPath = path.join(context.globalStorageUri.fsPath, `${gameTag}-tiger`);
+    const tigerPath = path.join(context.globalStorageUri.fsPath, "ck3-tiger");
 
     // Ensure the global storage directory exists
     if (!fs.existsSync(context.globalStorageUri.fsPath)) {
         fs.mkdirSync(context.globalStorageUri.fsPath, { recursive: true });
     }
 
-    log(`Downloading ${gameTag}-tiger release from:`, downloadUrl);
+    log("Downloading ck3-tiger release from:", downloadUrl);
     log("Downloading to:", tigerPath);
 
     try {
         await downloadAndExtract(downloadUrl, tigerPath);
         log("Download and extraction completed successfully.");
 
-        const executableFile = platform === "win32" ? `${gameTag}-tiger.exe` : `${gameTag}-tiger`;
+        const executableFile = platform === "win32" ? "ck3-tiger.exe" : "ck3-tiger";
         return path.join(tigerPath, executableFile);
     } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : String(error);
@@ -194,8 +193,8 @@ async function selectCK3TigerPath(): Promise<string | undefined> {
         filters: {
             Binaries: ["bin", "exe", "bat", "sh", "cmd"],
         },
-        title: "Select tiger binary",
-        openLabel: "Select tiger binary",
+        title: "Select ck3tiger binary",
+        openLabel: "Select ck3tiger binary",
     });
 
     const selectedPath = fileUri?.[0]?.fsPath;

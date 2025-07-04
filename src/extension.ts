@@ -31,7 +31,6 @@ export async function activate(context: vscode.ExtensionContext) {
     registerCommand("ck3tiger-for-vscode.openCK3Path", commands.openCK3Path);
     registerCommand("ck3tiger-for-vscode.getProblemsFromLog", commands.getProblemsFromLog);
     registerCommand("ck3tiger-for-vscode.reportBug", commands.reportBug);
-    registerCommand("ck3tiger-for-vscode.getGameTag", commands.getGameTag);
 
     // Initialize file watcher for the "Run on Save" feature
     initFileWatcher(context);

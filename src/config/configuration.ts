@@ -3,7 +3,6 @@ import { log } from "../logger";
 import { ensureCK3Path } from "./ensureCK3Path";
 import { ensureModPath } from "./ensureModPath";
 import { ensureTigerPath } from "./ensureTigerPath";
-import { ensureGameTag } from "./ensureGameTag";
 
 // Entry point to check and ensure the configuration is properly set.
 export async function checkConfiguration() {
@@ -16,7 +15,6 @@ export async function checkConfiguration() {
     await ensureTigerPath(config);
     await ensureCK3Path(config);
     await ensureModPath(config);
-    await ensureGameTag(config);
 }
 
 /**
@@ -28,12 +26,10 @@ export async function getPaths() {
     const tigerPath = config.get<string>("tigerPath");
     const ck3Path = config.get<string>("ck3Path");
     const modPath = config.get<string>("modPath");
-    const gameTag = config.get<string>("gameTag");
 
     return {
         tigerPath,
         ck3Path,
         modPath,
-        gameTag,
     };
 }

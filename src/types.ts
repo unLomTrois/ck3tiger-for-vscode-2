@@ -46,5 +46,3 @@ export type TigerReport = {
 };
 
 export type VscodeProgress = vscode.Progress<{ message?: string; increment?: number; }>;
-
-export const supportedGames: string[] = ["ck3", "vic3", "imperator"];

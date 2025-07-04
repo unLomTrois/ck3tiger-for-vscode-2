@@ -8,7 +8,7 @@ export function updateCK3Tiger() {
     vscode.window.withProgress(
         {
             location: vscode.ProgressLocation.Notification,
-            title: "Updating tiger...",
+            title: "Updating ck3tiger...",
             cancellable: true,
         },
         handleUpdateTigerProgress
@@ -24,16 +24,16 @@ async function handleUpdateTigerProgress(progress: VscodeProgress) {
             return;
         }
 
-        log("Updating tiger...");
-        progress.report({ message: "Updating tiger...", increment: 10 });
+        log("Updating ck3-tiger...");
+        progress.report({ message: "Updating ck3tiger...", increment: 10 });
 
         await executeTigerUpdate(tigerPath, progress);
         
-        vscode.window.showInformationMessage("Tiger update completed successfully");
+        vscode.window.showInformationMessage("CK3Tiger update completed successfully");
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
-        log(`Failed to update tiger: ${errorMessage}`);
-        vscode.window.showErrorMessage(`Failed to update tiger: ${errorMessage}`);
+        log(`Failed to update ck3tiger: ${errorMessage}`);
+        vscode.window.showErrorMessage(`Failed to update ck3tiger: ${errorMessage}`);
     }
 }
 
