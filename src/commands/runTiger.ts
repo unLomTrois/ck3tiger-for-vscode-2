@@ -9,11 +9,11 @@ import { getTigerLogPath, parseTigerLogFile } from "../utils/tigerLog";
 
 const execAsync = promisify(exec);
 
-export function runCK3Tiger() {
+export function runTiger() {
     vscode.window.withProgress(
         {
             location: vscode.ProgressLocation.Window,
-            title: "ck3tiger",
+            title: "tiger",
             cancellable: false,
         },
         executeValidationWithProgress
@@ -25,20 +25,20 @@ async function executeValidationWithProgress(
 ) {
     progress.report({ message: "Getting paths" });
 
-    const { ck3Path, tigerPath, modPath } = await getPaths();
+    const { gamePath, tigerPath, modPath } = await getPaths();
 
     // check if paths are set
-    if (!ck3Path || !tigerPath || !modPath) {
+    if (!gamePath || !tigerPath || !modPath) {
         await checkConfiguration();
         return;
     }
 
     const tigerLogPath = getTigerLogPath(tigerPath);
 
-    progress.report({ message: `Running ck3tiger` });
-    const command = `"${tigerPath}" --ck3 "${ck3Path}" --json "${modPath}" > "${tigerLogPath}"`;
+    progress.report({ message: `Running tiger` });
+    const command = `"${tigerPath}" --game "${gamePath}" --json "${modPath}" > "${tigerLogPath}"`;
 
-    log(`Running ck3tiger:\n> ${command}\n`);
+    log(`Running tiger:\n> ${command}\n`);
     await executeCommandAsChildProcess(command);
 
     progress.report({ message: "Loading tiger.json" });

@@ -8,19 +8,19 @@ import { log } from "../logger";
  * @returns {Promise<void>}
  */
 export async function openTigerPath(): Promise<void> {
-    const config = vscode.workspace.getConfiguration("ck3tiger");
+    const config = vscode.workspace.getConfiguration("tiger");
     const tigerPath = config.get<string>("tigerPath");
 
     if (!tigerPath) {
         vscode.window.showErrorMessage(
-            "ck3tiger.tigerPath not found. Please configure the tiger path first."
+            "tiger.tigerPath not found. Please configure the tiger path first."
         );
         return;
     }
 
     if (!fs.existsSync(tigerPath)) {
         vscode.window.showErrorMessage(
-            `The configured ck3tiger path (${tigerPath}) does not exist.`
+            `The configured tiger path (${tigerPath}) does not exist.`
         );
         return;
     }
@@ -31,12 +31,12 @@ export async function openTigerPath(): Promise<void> {
     try {
         // Open the folder in the OS file explorer
         await vscode.env.openExternal(uri);
-        log(`Opened ck3tiger directory: ${tigerDirectory}`);
+        log(`Opened tiger directory: ${tigerDirectory}`);
     } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         log(`Failed to open tiger directory: ${errorMessage}`);
         vscode.window.showErrorMessage(
-            `Failed to open the ck3tiger directory: ${errorMessage}`
+            `Failed to open the tiger directory: ${errorMessage}`
         );
     }
 }

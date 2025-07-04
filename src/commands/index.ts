@@ -1,10 +1,10 @@
 import * as vscode from "vscode";
 
-export { runCK3Tiger } from "./runCK3Tiger";
-export { updateCK3Tiger } from "./updateCK3Tiger";
+export { runTiger } from "./runTiger";
+export { updateTiger } from "./updateTiger";
 export { resetPaths } from "./resetPaths";
 export { openTigerPath } from "./openTigerPath";
-export { openCK3Path } from "./openCK3Path";
+export { openGamePath } from "./openGamePath";
 export { getProblemsFromLog } from "./getProblemsFromLog";
 export { reportBug } from "./reportBug";
 

@@ -8,7 +8,7 @@ export function getProblemsFromLog() {
     vscode.window.withProgress(
         {
             location: vscode.ProgressLocation.Window,
-            title: "ck3tiger",
+            title: "tiger",
             cancellable: false,
         },
         getProblemsWithProgress
@@ -23,7 +23,7 @@ async function getProblemsWithProgress(
     const { tigerPath } = await getPaths();
 
     if (!tigerPath) {
-        vscode.window.showErrorMessage("ck3tiger path is not set. Please configure it first.");
+        vscode.window.showErrorMessage("tiger binary path is not set. Please configure it first.");
         return;
     }
 
