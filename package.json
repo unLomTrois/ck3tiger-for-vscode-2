@@ -67,11 +67,32 @@
             {
                 "command": "ck3tiger-for-vscode.reportBug",
                 "title": "ck3tiger: Report a Bug"
+            },
+            {
+                "command": "ck3tiger-for-vscode.getGameTag",
+                "title": "ck3tiger: Check the game for which Tiger is configured"
             }
         ],
         "configuration": {
             "title": "ck3tiger configuration",
             "properties": {
+                "ck3tiger.gameTag": {
+                    "title": "Supported Game",
+                    "scope": "application",
+                    "type": "string",
+                    "enum": [
+                        "ck3",
+                        "imperator",
+                        "vic3"
+                    ],
+                    "default": "ck3",
+                    "markdownEnumDescriptions": [
+                        "Crusader Kings III",
+                        "Imperator: Rome",
+                        "Victoria 3"
+                    ],
+                    "markdownDescription": "Specifies which game you want to run Tiger for"
+                },
                 "ck3tiger.tigerPath": {
                     "scope": "application",
                     "type": "string",
