@@ -29,7 +29,7 @@ async function handleUpdateTigerProgress(progress: VscodeProgress) {
 
         await executeTigerUpdate(tigerPath, progress);
         
-        vscode.window.showInformationMessage("CK3Tiger update completed successfully");
+        vscode.window.showInformationMessage("Successfully completed ck3tiger update.");
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         log(`Failed to update ck3tiger: ${errorMessage}`);

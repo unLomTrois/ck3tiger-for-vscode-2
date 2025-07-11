@@ -41,12 +41,12 @@ export async function activate(context: vscode.ExtensionContext) {
 async function afterStartup(context: vscode.ExtensionContext) {
     const config = vscode.workspace.getConfiguration("ck3tiger");
 
-    const openPreviousLogOnStartup = config.get("openPreviousLogOnStartup");
+    const openPreviousLogOnStartup: boolean = config.get<boolean>("openPreviousLogOnStartup") ?? false;
     if (openPreviousLogOnStartup) {
         await vscode.commands.executeCommand("ck3tiger-for-vscode.getProblemsFromLog");
     }
 
-    const checkUpdatesOnStartup = config.get("checkUpdatesOnStartup");
+    const checkUpdatesOnStartup: boolean = config.get<boolean>("checkUpdatesOnStartup") ?? false;
     if (checkUpdatesOnStartup) {
         log("Checking for ck3tiger updates on startup");
         await vscode.commands.executeCommand("ck3tiger-for-vscode.updateCk3tiger");
