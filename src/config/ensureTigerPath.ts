@@ -2,17 +2,18 @@ import * as vscode from "vscode";
 import { log, revealLog } from "../logger";
 import * as os from "os";
 import path from "path";
-import { ContextContainer } from "../context";
 import fs from "fs";
 import { downloadAndExtract } from "../utils/downloadFile";
 
 /**
  * Ensure that the CK3-Tiger path is properly configured.
  * @param {vscode.WorkspaceConfiguration} config - The workspace configuration object.
+ * @param {vscode.ExtensionContext} context - The extension context.
  * @returns {Promise<void>}
  */
 export async function ensureTigerPath(
-    config: vscode.WorkspaceConfiguration
+    config: vscode.WorkspaceConfiguration,
+    context: vscode.ExtensionContext
 ): Promise<void> {
     const tigerPath = config.get<string>("tigerPath");
 
@@ -20,7 +21,7 @@ export async function ensureTigerPath(
         return;
     }
 
-    const newPath = await promptForTigerPath();
+    const newPath = await promptForTigerPath(context);
 
     if (newPath) {
         await updateTigerPath(config, newPath);
@@ -33,9 +34,10 @@ export async function ensureTigerPath(
 
 /**
  * Prompt the user to set the tiger path.
+ * @param {vscode.ExtensionContext} context - The extension context.
  * @returns {Promise<string | undefined>} The selected tiger path, or undefined if the user cancels.
  */
-async function promptForTigerPath(): Promise<string | undefined> {
+async function promptForTigerPath(context: vscode.ExtensionContext): Promise<string | undefined> {
     const userChoice = await vscode.window.showInformationMessage(
         "🐯 How do you want to setup ck3-tiger? (If you don't know, click 'Download it for me')",
         "Download it for me",
@@ -47,7 +49,7 @@ async function promptForTigerPath(): Promise<string | undefined> {
             "🐯 Downloading ck3-tiger for you. Please wait..."
         );
 
-        const downloadedPath = await downloadTiger();
+        const downloadedPath = await downloadTiger(context);
 
         if (downloadedPath) {
             return downloadedPath;
@@ -69,9 +71,10 @@ async function promptForTigerPath(): Promise<string | undefined> {
 
 /**
  * Download the latest version of ck3-tiger from GitHub.
+ * @param {vscode.ExtensionContext} context - The extension context.
  * @returns {Promise<string | undefined>} The path to the downloaded executable, or undefined if download failed.
  */
-async function downloadTiger(): Promise<string | undefined> {
+async function downloadTiger(context: vscode.ExtensionContext): Promise<string | undefined> {
     try {
         const { Octokit } = await import("@octokit/core");
         const octokit = new Octokit();
@@ -95,7 +98,7 @@ async function downloadTiger(): Promise<string | undefined> {
         }
 
         const { downloadUrl } = assetInfo;
-        return await downloadAndExtractTiger(downloadUrl, platform);
+        return await downloadAndExtractTiger(downloadUrl, platform, context);
     } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         log(`Error downloading tiger: ${errorMessage}`);
@@ -154,15 +157,20 @@ function findPlatformAsset(assets: any[], platform: NodeJS.Platform): { download
  * Download and extract the tiger binary.
  * @param {string} downloadUrl - The URL to download from.
  * @param {NodeJS.Platform} platform - The current platform.
+ * @param {vscode.ExtensionContext} context - The extension context.
  * @returns {Promise<string | undefined>} The path to the extracted executable.
  */
-async function downloadAndExtractTiger(downloadUrl: string, platform: NodeJS.Platform): Promise<string | undefined> {
-    const context = ContextContainer.context;
-    const tigerPath = path.join(context.globalStorageUri.fsPath, "ck3-tiger");
+async function downloadAndExtractTiger(
+    downloadUrl: string,
+    platform: NodeJS.Platform,
+    context: vscode.ExtensionContext
+): Promise<string | undefined> {
+    const globalStoragePath = context.globalStorageUri.fsPath;
+    const tigerPath = path.join(globalStoragePath, "ck3-tiger");
 
     // Ensure the global storage directory exists
-    if (!fs.existsSync(context.globalStorageUri.fsPath)) {
-        fs.mkdirSync(context.globalStorageUri.fsPath, { recursive: true });
+    if (!fs.existsSync(globalStoragePath)) {
+        fs.mkdirSync(globalStoragePath, { recursive: true });
     }
 
     log("Downloading ck3-tiger release from:", downloadUrl);

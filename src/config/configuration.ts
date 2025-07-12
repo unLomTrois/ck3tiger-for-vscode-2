@@ -5,14 +5,14 @@ import { ensureModPath } from "./ensureModPath";
 import { ensureTigerPath } from "./ensureTigerPath";
 
 // Entry point to check and ensure the configuration is properly set.
-export async function checkConfiguration() {
+export async function checkConfiguration(context: vscode.ExtensionContext) {
     log("Checking configuration");
 
     // Fetch the extension configuration settings
     const config = vscode.workspace.getConfiguration("ck3tiger");
 
     // Ensure that the CK3 path is set in the configuration
-    await ensureTigerPath(config);
+    await ensureTigerPath(config, context);
     await ensureCK3Path(config);
     await ensureModPath(config);
 }
