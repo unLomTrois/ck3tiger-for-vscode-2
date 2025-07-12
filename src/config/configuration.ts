@@ -12,9 +12,9 @@ export async function checkConfiguration() {
     const config = vscode.workspace.getConfiguration("ck3tiger");
 
     // Ensure that the CK3 path is set in the configuration
-    await ensureTigerPath(config);
     await ensureCK3Path(config);
     await ensureModPath(config);
+    await ensureTigerPath(config);
 }
 
 /**

@@ -10,9 +10,9 @@ export async function resetPaths(): Promise<void> {
     const target = vscode.ConfigurationTarget.Global;
 
     await Promise.all([
-        config.update("tigerPath", undefined, target),
         config.update("ck3Path", undefined, target),
         config.update("modPath", undefined, target),
+        config.update("tigerPath", undefined, target),
     ]);
 
     await checkConfiguration();
