@@ -10,8 +10,8 @@ import {
 } from "../types";
 
 /**
- * Generates VS Code diagnostics from tiger validation results
- * @param problems The parsed JSON output from tiger
+ * Generates VS Code diagnostics from ck3tiger validation results
+ * @param problems The parsed JSON output from ck3tiger
  * @returns The diagnostic collection with errors mapped to files
  */
 export function generateDiagnostics(problems: TigerReport[]): vscode.DiagnosticCollection {
@@ -135,7 +135,7 @@ function handleProcessingError(error: unknown, problem: TigerReport): void {
 }
 
 /**
- * Creates a VS Code diagnostic from a tiger problem
+ * Creates a VS Code diagnostic from a ck3tiger problem
  * @param problem The error entry containing message and severity
  * @param location The location where the problem occurs
  * @returns A VS Code diagnostic object
@@ -156,7 +156,7 @@ function createDiagnostic(
 
     // Create a diagnostic for the current problem
     const diagnostic = new vscode.Diagnostic(range, message, severity);
-    diagnostic.source = "tiger";
+    diagnostic.source = "ck3tiger";
     diagnostic.code = `${problem.confidence} ${problem.key}`;
 
     return diagnostic;

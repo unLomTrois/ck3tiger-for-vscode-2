@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { log } from "../logger";
-import { ensureGamePath } from "./ensureGamePath";
+import { ensureCK3Path } from "./ensureCK3Path";
 import { ensureModPath } from "./ensureModPath";
 import { ensureTigerPath } from "./ensureTigerPath";
 
@@ -9,10 +9,10 @@ export async function checkConfiguration() {
     log("Checking configuration");
 
     // Fetch the extension configuration settings
-    const config = vscode.workspace.getConfiguration("tiger");
+    const config = vscode.workspace.getConfiguration("ck3tiger");
 
-    // Ensure that the game path is set in the configuration
-    await ensureGamePath(config);
+    // Ensure that the CK3 path is set in the configuration
+    await ensureCK3Path(config);
     await ensureModPath(config);
     await ensureTigerPath(config);
 }
@@ -21,14 +21,14 @@ export async function checkConfiguration() {
  * Get the paths from the configuration.
  */
 export async function getPaths() {
-    const config = vscode.workspace.getConfiguration("tiger");
+    const config = vscode.workspace.getConfiguration("ck3tiger");
 
-    const gamePath = config.get<string>("gamePath");
+    const ck3Path = config.get<string>("ck3Path");
     const modPath = config.get<string>("modPath");
     const tigerPath = config.get<string>("tigerPath");
 
     return {
-        gamePath,
+        ck3Path,
         modPath,
         tigerPath,
     };

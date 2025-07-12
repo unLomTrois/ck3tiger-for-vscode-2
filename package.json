@@ -1,6 +1,6 @@
 {
-    "name": "tiger-for-vscode",
-    "displayName": "tiger for VS Code",
+    "name": "ck3tiger-for-vscode",
+    "displayName": "ck3tiger for VS Code",
     "description": "Helps you make mods for Crusader Kings III/Victoria 3/Imperator: Rome using Amtep's Tiger tool (previously ck3-tiger)",
     "version": "1.1.2",
     "icon": "images/logo.png",
@@ -44,59 +44,59 @@
     "contributes": {
         "commands": [
             {
-                "command": "tiger-for-vscode.runTiger",
-                "title": "tiger: Run tiger"
+                "command": "ck3tiger-for-vscode.runCk3Tiger",
+                "title": "ck3tiger: Run ck3tiger"
             },
             {
-                "command": "tiger-for-vscode.updateTiger",
-                "title": "tiger: Update tiger"
+                "command": "ck3tiger-for-vscode.updateCk3Tiger",
+                "title": "ck3tiger: Update ck3tiger"
             },
             {
-                "command": "tiger-for-vscode.resetPaths",
-                "title": "tiger: Reset Paths"
+                "command": "ck3tiger-for-vscode.resetPaths",
+                "title": "ck3tiger: Reset Paths"
             },
             {
-                "command": "tiger-for-vscode.getProblemsFromLog",
-                "title": "tiger: Get problems from the log file (without running tiger)"
+                "command": "ck3tiger-for-vscode.getProblemsFromLog",
+                "title": "ck3tiger: Get problems from the log file (without running tiger)"
             },
             {
-                "command": "tiger-for-vscode.openTigerPath",
-                "title": "tiger: Open Tiger Binary Location"
+                "command": "ck3tiger-for-vscode.openTigerPath",
+                "title": "ck3tiger: Open Tiger Binary Location"
             },
             {
-                "command": "tiger-for-vscode.openGamePath",
-                "title": "tiger: Open Game Folder"
+                "command": "ck3tiger-for-vscode.openCk3Path",
+                "title": "ck3tiger: Open CK3 Game Folder"
             },
             {
-                "command": "tiger-for-vscode.reportBug",
-                "title": "tiger: Report a Bug"
+                "command": "ck3tiger-for-vscode.reportBug",
+                "title": "ck3tiger: Report a Bug"
             }
         ],
         "configuration": {
-            "title": "tiger configuration",
+            "title": "ck3tiger configuration",
             "properties": {
-                "tiger.tigerPath": {
+                "ck3tiger.tigerPath": {
                     "scope": "application",
                     "type": "string",
-                    "markdownDescription": "Specifies location of your tiger instance"
+                    "markdownDescription": "Specifies location of your ck3tiger instance"
                 },
-                "tiger.gamePath": {
+                "ck3tiger.ck3Path": {
                     "scope": "application",
                     "type": "string",
-                    "description": "The location of a vanilla installation (like \"C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings III/game\""
+                    "description": "The location of a vanilla CK3 installation (like \"C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings III/game\""
                 },
-                "tiger.modPath": {
+                "ck3tiger.modPath": {
                     "scope": "application",
                     "type": "string",
                     "description": "The location of your .mod file (CK3) or root dir of your mod (Vic3) (like \"Like Documents/Paradox Interactive/Crusader Kings III/mod/<.mod file>\""
                 },
-                "tiger.gameTag": {
+                "ck3tiger.gameTag": {
                     "scope": "application",
                     "type": "string",
                     "description": "The tag of the selected game, based on the gamePath - 'ck3', 'vic3', or 'imperator'",
                     "markdownDescription": "Please allow this value to be set automatically during installation of this VSCode extension"
                 },
-                "tiger.minConfidence": {
+                "ck3tiger.minConfidence": {
                     "title": "Minimum confidence level",
                     "scope": "application",
                     "type": "string",
@@ -113,33 +113,33 @@
                     ],
                     "markdownDescription": "\nThe minimum confidence level for a problem to be reported.\n\nConfidence is how sure the validator is about a problem.\n\n- *weak* for likely false positives.\n- *reasonable* for most messages.\n- *strong* for confidence that the problem is real.\n\n**weak** is the default."
                 },
-                "tiger.experimental.runOnSave": {
-                    "title": "Run tiger on file save",
+                "ck3tiger.experimental.runOnSave": {
+                    "title": "Run ck3tiger on file save",
                     "scope": "application",
                     "type": "boolean",
                     "default": false,
-                    "markdownDescription": "When enabled, automatically runs tiger validation when a file is saved within the mod directory."
+                    "markdownDescription": "When enabled, automatically runs ck3tiger validation when a file is saved within the mod directory."
                 },
-                "tiger.experimental.patterns": {
+                "ck3tiger.experimental.patterns": {
                     "title": "File patterns to detect changes",
                     "scope": "application",
                     "type": "string",
                     "default": "**/*.{txt,yml}",
-                    "markdownDescription": "A glob pattern for files to run tiger on when a file is saved within the mod directory."
+                    "markdownDescription": "A glob pattern for files to run ck3tiger on when a file is saved within the mod directory."
                 },
-                "tiger.openPreviousLogOnStartup": {
+                "ck3tiger.openPreviousLogOnStartup": {
                     "title": "Open previous log on startup",
                     "scope": "application",
                     "type": "boolean",
                     "default": false,
                     "markdownDescription": "When enabled, automatically generates problems from the previous log file on startup."
                 },
-                "tiger.checkUpdatesOnStartup": {
+                "ck3tiger.checkUpdatesOnStartup": {
                     "title": "Check for updates on startup",
                     "scope": "application",
                     "type": "boolean",
                     "default": false,
-                    "markdownDescription": "When enabled, automatically checks for tiger updates when the extension starts."
+                    "markdownDescription": "When enabled, automatically checks for ck3tiger updates when the extension starts."
                 }
             }
         }

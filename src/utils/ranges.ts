@@ -2,9 +2,9 @@ import * as vscode from "vscode";
 import { TigerLocation } from "../types";
 
 /**
- * Creates a VS Code Range from a tiger location
+ * Creates a VS Code Range from a ck3tiger location
  * Handles cases where line numbers or columns are null (file-level errors)
- * @param location The location information from tiger
+ * @param location The location information from ck3tiger
  * @returns A VS Code Range object pointing to the appropriate position
  */
 export function createRangeFromTigerLocation(location: TigerLocation): vscode.Range {

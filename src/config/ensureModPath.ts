@@ -21,7 +21,7 @@ export async function ensureModPath(
         await updateModPath(config, newPath);
     } else {
         vscode.window.showErrorMessage(
-            "tiger.modPath not found. Please manually set the game path in the extension settings or try again."
+            "ck3tiger.modPath not found. Please manually set the ck3path in the extension settings or try again."
         );
     }
 }
@@ -45,11 +45,11 @@ async function promptForModPath(): Promise<string | undefined> {
 }
 
 /**
- * Open a dialog for selecting the game folder path.
+ * Open a dialog for selecting the mod folder path.
  * @returns {Promise<string | undefined>} The selected folder path, or undefined if none is selected.
  */
 async function selectModPath(): Promise<string | undefined> {
-    const config = vscode.workspace.getConfiguration("tiger");
+    const config = vscode.workspace.getConfiguration("ck3tiger");
     const gameTag = config.get<string>("gameTag") || 'ck3';
     const folderUri = await vscode.window.showOpenDialog({
         canSelectFiles: gameTag !== 'vic3',
@@ -87,7 +87,7 @@ async function updateModPath(
     config: vscode.WorkspaceConfiguration,
     path: string
 ) {
-    log(`tiger.modPath was set to ${path}`);
+    log(`ck3tiger.modPath was set to ${path}`);
     try {
         await config.update(
             "modPath",
@@ -95,9 +95,9 @@ async function updateModPath(
             vscode.ConfigurationTarget.Global
         );
     } catch (error: any) {
-        log(`Failed to update tiger.modPath: ${error.message || error}`);
+        log(`Failed to update ck3tiger.modPath: ${error.message || error}`);
         vscode.window.showErrorMessage(
-            "Failed to update tiger.modPath. Please manually set the mod path in the extension settings or try again."
+            "Failed to update ck3tiger.modPath. Please manually set the mod path in the extension settings or try again."
         );
     }
 }

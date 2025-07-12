@@ -20,11 +20,11 @@ export function filterProblems(problems: TigerReport[]): TigerReport[] {
 
 /**
  * Filters problems based on their confidence level
- * @param problems Array of error entries from tiger
+ * @param problems Array of error entries from ck3tiger
  * @returns Filtered array of problems that meet the minimum confidence level
  */
 export function filterProblemsByConfidence(problems: TigerReport[]): TigerReport[] {
-    const config = vscode.workspace.getConfiguration("tiger");
+    const config = vscode.workspace.getConfiguration("ck3tiger");
     const minConfidenceStr = config.get<TigerConfidence>("minConfidence", "weak");
     const minConfidence = confidenceLevelMap[minConfidenceStr];
 

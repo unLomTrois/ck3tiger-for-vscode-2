@@ -9,10 +9,10 @@ export function initStatusBarButton(context: vscode.ExtensionContext): void {
         vscode.StatusBarAlignment.Left,
         100
     );
-    statusBarButton.text = "🐅Run tiger🐅";
+    statusBarButton.text = "🐅Run ck3tiger🐅";
     statusBarButton.tooltip =
-        "This will run tiger in the background and updates the problems tab";
-    statusBarButton.command = "tiger-for-vscode.runTiger";
+        "This will run ck3tiger in the background and updates the problems tab";
+    statusBarButton.command = "ck3tiger-for-vscode.runCk3Tiger";
     statusBarButton.show();
 
     context.subscriptions.push(statusBarButton);

@@ -5,7 +5,7 @@ import { getPaths } from "../config/configuration";
 import { calculateFileHash } from "./calculateFileHash";
 
 // File watcher constants
-const CONFIG_SECTION = "tiger";
+const CONFIG_SECTION = "ck3tiger";
 const RUN_ON_SAVE_CONFIG = "experimental.runOnSave";
 const PATTERNS_CONFIG = "experimental.patterns";
 const DEFAULT_PATTERNS = "**/*.{txt,yml}";
@@ -173,7 +173,7 @@ async function handleFileChange(uri: vscode.Uri): Promise<void> {
     }
     
     fileHashes.set(filePath, currentHash);
-    await vscode.commands.executeCommand("tiger-for-vscode.runTiger");
+    await vscode.commands.executeCommand("ck3tiger-for-vscode.runCk3Tiger");
 }
 
 /**

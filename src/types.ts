@@ -32,7 +32,7 @@ export const severityMap: Record<TigerSeverity, vscode.DiagnosticSeverity> = {
 };
 
 /**
- * Represents a single report from tiger.
+ * Represents a single report from ck3tiger.
  * It is not called an error, problem, etc. because besides errors, it also includes tips, untidy, warnings, etc.
  * Each file can have multiple reports.
  */

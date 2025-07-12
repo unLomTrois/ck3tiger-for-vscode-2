@@ -4,7 +4,7 @@ let globalDiagnosticCollection: vscode.DiagnosticCollection;
 
 export function initDiagnosticCollection(): vscode.DiagnosticCollection {
     globalDiagnosticCollection =
-        vscode.languages.createDiagnosticCollection("tiger");
+        vscode.languages.createDiagnosticCollection("ck3tiger");
 
     return globalDiagnosticCollection;
 }

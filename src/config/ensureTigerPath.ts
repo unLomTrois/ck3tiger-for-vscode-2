@@ -7,7 +7,7 @@ import fs from "fs";
 import { downloadAndExtract } from "../utils/downloadFile";
 
 /**
- * Ensure that the Tiger binary path is properly configured.
+ * Ensure that the CK3-Tiger binary path is properly configured.
  * @param {vscode.WorkspaceConfiguration} config - The workspace configuration object.
  * @returns {Promise<void>}
  */
@@ -26,7 +26,7 @@ export async function ensureTigerPath(
         await updateTigerPath(config, newPath);
     } else {
         vscode.window.showErrorMessage(
-            "tiger.tigerPath not found. Please manually set the tiger binary path in the extension settings or try again."
+            "ck3tiger.tigerPath not found. Please manually set the tiger binary path in the extension settings or try again."
         );
     }
 }
@@ -37,14 +37,14 @@ export async function ensureTigerPath(
  */
 async function promptForTigerPath(): Promise<string | undefined> {
     const userChoice = await vscode.window.showInformationMessage(
-        "🐯 How do you want to setup tiger? (If you don't know, click 'Download it for me')",
+        "🐯 How do you want to setup ck3-tiger? (If you don't know, click 'Download it for me')",
         "Download it for me",
-        "Set up the path to the tiger executable manually"
+        "Set up the path to ck3-tiger executable manually"
     );
 
     if (userChoice === "Download it for me") {
         vscode.window.showInformationMessage(
-            "🐯 Downloading tiger for you. Please wait..."
+            "🐯 Downloading ck3-tiger for you. Please wait..."
         );
 
         const downloadedPath = await downloadTiger();
@@ -55,20 +55,20 @@ async function promptForTigerPath(): Promise<string | undefined> {
     }
 
     const manualSelection = await vscode.window.showInformationMessage(
-        "🐯 Let's find your tiger binary!",
+        "🐯 Let's find your ck3tiger binary!",
         "Open",
         "Cancel"
     );
 
     if (manualSelection === "Open") {
-        return await selectGameTigerPath();
+        return await selectCK3TigerPath();
     }
 
     return undefined;
 }
 
 /**
- * Download the latest version of tiger from GitHub.
+ * Download the latest version of ck3-tiger from GitHub.
  * @returns {Promise<string | undefined>} The path to the downloaded executable, or undefined if download failed.
  */
 async function downloadTiger(): Promise<string | undefined> {
@@ -93,7 +93,7 @@ async function downloadTiger(): Promise<string | undefined> {
 
         const assetInfo = findPlatformAsset(latestRelease.assets, platform, gameTag);
         if (!assetInfo) {
-            vscode.window.showErrorMessage("No tiger binary found for your platform");
+            vscode.window.showErrorMessage("No ck3-tiger binary found for your platform");
             return undefined;
         }
 
@@ -102,7 +102,7 @@ async function downloadTiger(): Promise<string | undefined> {
     } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         log(`Error downloading tiger: ${errorMessage}`);
-        vscode.window.showErrorMessage(`Failed to download tiger: ${errorMessage}`);
+        vscode.window.showErrorMessage(`Failed to download ck3-tiger: ${errorMessage}`);
         return undefined;
     }
 }
@@ -125,7 +125,7 @@ async function fetchLatestRelease(octokit: any): Promise<any | undefined> {
     } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         log(`Error fetching latest release: ${errorMessage}`);
-        vscode.window.showErrorMessage(`Failed to fetch latest tiger release: ${errorMessage}`);
+        vscode.window.showErrorMessage(`Failed to fetch latest ck3-tiger release: ${errorMessage}`);
         return undefined;
     }
 }
@@ -187,10 +187,10 @@ async function downloadAndExtractTiger(downloadUrl: string, platform: NodeJS.Pla
 }
 
 /**
- * Open a dialog for selecting the tiger binary.
+ * Open a dialog for selecting the ck3tiger binary.
  * @returns {Promise<string | undefined>} The selected file path, or undefined if none is selected.
  */
-async function selectGameTigerPath(): Promise<string | undefined> {
+async function selectCK3TigerPath(): Promise<string | undefined> {
     const fileUri = await vscode.window.showOpenDialog({
         canSelectFiles: true,
         canSelectFolders: false,
@@ -198,12 +198,12 @@ async function selectGameTigerPath(): Promise<string | undefined> {
         filters: {
             Binaries: ["bin", "exe", "bat", "sh", "cmd"],
         },
-        title: "Select tiger binary",
-        openLabel: "Select tiger binary",
+        title: "Select ck3tiger binary",
+        openLabel: "Select ck3tiger binary",
     });
 
     const selectedPath = fileUri?.[0]?.fsPath;
-    log("tiger binary path selected:", selectedPath);
+    log("ck3path selected:", selectedPath);
 
     return selectedPath;
 }
@@ -219,7 +219,7 @@ async function updateTigerPath(
     tigerPath: string
 ): Promise<void> {
     try {
-        log(`tiger.tigerPath was set to ${tigerPath}`);
+        log(`ck3tiger.tigerPath was set to ${tigerPath}`);
         await config.update(
             "tigerPath",
             tigerPath,
@@ -227,9 +227,9 @@ async function updateTigerPath(
         );
     } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : String(error);
-        log(`Failed to update tiger.tigerPath: ${errorMessage}`);
+        log(`Failed to update ck3tiger.tigerPath: ${errorMessage}`);
         vscode.window.showErrorMessage(
-            "Failed to update tiger.tigerPath. Please manually set the tiger binary path in the extension settings or try again."
+            "Failed to update ck3tiger.tigerPath. Please manually set the ck3path in the extension settings or try again."
         );
     }
 }

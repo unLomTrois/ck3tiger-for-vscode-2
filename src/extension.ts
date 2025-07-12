@@ -18,19 +18,19 @@ export async function activate(context: vscode.ExtensionContext) {
 
     initLogger();
 
-    log("Initializing tiger extension");
+    log("Initializing ck3tiger extension");
 
     await checkConfiguration();
 
     initStatusBarButton(context);
 
-    registerCommand("tiger-for-vscode.runTiger", commands.runTiger);
-    registerCommand("tiger-for-vscode.updateTiger", commands.updateTiger);
-    registerCommand("tiger-for-vscode.resetPaths", commands.resetPaths);
-    registerCommand("tiger-for-vscode.openTigerPath", commands.openTigerPath);
-    registerCommand("tiger-for-vscode.openGamePath", commands.openGamePath);
-    registerCommand("tiger-for-vscode.getProblemsFromLog", commands.getProblemsFromLog);
-    registerCommand("tiger-for-vscode.reportBug", commands.reportBug);
+    registerCommand("ck3tiger-for-vscode.runCk3Tiger", commands.runCK3Tiger);
+    registerCommand("ck3tiger-for-vscode.updateCk3Tiger", commands.updateCK3Tiger);
+    registerCommand("ck3tiger-for-vscode.resetPaths", commands.resetPaths);
+    registerCommand("ck3tiger-for-vscode.openTigerPath", commands.openTigerPath);
+    registerCommand("ck3tiger-for-vscode.openCK3Path", commands.openCK3Path);
+    registerCommand("ck3tiger-for-vscode.getProblemsFromLog", commands.getProblemsFromLog);
+    registerCommand("ck3tiger-for-vscode.reportBug", commands.reportBug);
 
     // Initialize file watcher for the "Run on Save" feature
     initFileWatcher(context);
@@ -39,17 +39,17 @@ export async function activate(context: vscode.ExtensionContext) {
 }
 
 async function afterStartup(context: vscode.ExtensionContext) {
-    const config = vscode.workspace.getConfiguration("tiger");
+    const config = vscode.workspace.getConfiguration("ck3tiger");
 
     const openPreviousLogOnStartup = config.get("openPreviousLogOnStartup");
     if (openPreviousLogOnStartup) {
-        await vscode.commands.executeCommand("tiger-for-vscode.getProblemsFromLog");
+        await vscode.commands.executeCommand("ck3tiger-for-vscode.getProblemsFromLog");
     }
 
     const checkUpdatesOnStartup = config.get("checkUpdatesOnStartup");
     if (checkUpdatesOnStartup) {
-        log("Checking for tiger updates on startup");
-        await vscode.commands.executeCommand("tiger-for-vscode.updateTiger");
+        log("Checking for ck3tiger updates on startup");
+        await vscode.commands.executeCommand("ck3tiger-for-vscode.updateCk3Tiger");
     }
 }
 
