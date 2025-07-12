@@ -24,8 +24,8 @@ export async function activate(context: vscode.ExtensionContext) {
 
     initStatusBarButton(context);
 
-    registerCommand("ck3tiger-for-vscode.runCk3Tiger", commands.runCK3Tiger);
-    registerCommand("ck3tiger-for-vscode.updateCk3Tiger", commands.updateCK3Tiger);
+    registerCommand("ck3tiger-for-vscode.runCk3tiger", commands.runCK3Tiger);
+    registerCommand("ck3tiger-for-vscode.updateCk3tiger", commands.updateCK3Tiger);
     registerCommand("ck3tiger-for-vscode.resetPaths", commands.resetPaths);
     registerCommand("ck3tiger-for-vscode.openTigerPath", commands.openTigerPath);
     registerCommand("ck3tiger-for-vscode.openCK3Path", commands.openCK3Path);
@@ -49,7 +49,7 @@ async function afterStartup(context: vscode.ExtensionContext) {
     const checkUpdatesOnStartup = config.get("checkUpdatesOnStartup");
     if (checkUpdatesOnStartup) {
         log("Checking for ck3tiger updates on startup");
-        await vscode.commands.executeCommand("ck3tiger-for-vscode.updateCk3Tiger");
+        await vscode.commands.executeCommand("ck3tiger-for-vscode.updateCk3tiger");
     }
 }
 

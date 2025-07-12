@@ -23,13 +23,13 @@ export async function checkConfiguration() {
 export async function getPaths() {
     const config = vscode.workspace.getConfiguration("ck3tiger");
 
+    const tigerPath = config.get<string>("tigerPath");
     const ck3Path = config.get<string>("ck3Path");
     const modPath = config.get<string>("modPath");
-    const tigerPath = config.get<string>("tigerPath");
 
     return {
+        tigerPath,
         ck3Path,
         modPath,
-        tigerPath,
     };
 }

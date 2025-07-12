@@ -44,11 +44,11 @@
     "contributes": {
         "commands": [
             {
-                "command": "ck3tiger-for-vscode.runCk3Tiger",
+                "command": "ck3tiger-for-vscode.runCk3tiger",
                 "title": "ck3tiger: Run ck3tiger"
             },
             {
-                "command": "ck3tiger-for-vscode.updateCk3Tiger",
+                "command": "ck3tiger-for-vscode.updateCk3tiger",
                 "title": "ck3tiger: Update ck3tiger"
             },
             {
@@ -57,14 +57,14 @@
             },
             {
                 "command": "ck3tiger-for-vscode.getProblemsFromLog",
-                "title": "ck3tiger: Get problems from the log file (without running tiger)"
+                "title": "ck3tiger: Get problems from the log file (without running ck3tiger)"
             },
             {
                 "command": "ck3tiger-for-vscode.openTigerPath",
                 "title": "ck3tiger: Open Tiger Binary Location"
             },
             {
-                "command": "ck3tiger-for-vscode.openCk3Path",
+                "command": "ck3tiger-for-vscode.openCK3Path",
                 "title": "ck3tiger: Open CK3 Game Folder"
             },
             {

@@ -7,7 +7,7 @@ import fs from "fs";
 import { downloadAndExtract } from "../utils/downloadFile";
 
 /**
- * Ensure that the CK3-Tiger binary path is properly configured.
+ * Ensure that the CK3-Tiger path is properly configured.
  * @param {vscode.WorkspaceConfiguration} config - The workspace configuration object.
  * @returns {Promise<void>}
  */
@@ -26,7 +26,7 @@ export async function ensureTigerPath(
         await updateTigerPath(config, newPath);
     } else {
         vscode.window.showErrorMessage(
-            "ck3tiger.tigerPath not found. Please manually set the tiger binary path in the extension settings or try again."
+            "ck3tiger.tigerPath not found. Please manually set the ck3path in the extension settings or try again."
         );
     }
 }
@@ -72,7 +72,7 @@ async function promptForTigerPath(): Promise<string | undefined> {
  * @returns {Promise<string | undefined>} The path to the downloaded executable, or undefined if download failed.
  */
 async function downloadTiger(): Promise<string | undefined> {
-    const config = vscode.workspace.getConfiguration("tiger");
+    const config = vscode.workspace.getConfiguration("ck3tiger");
     const gameTag = config.get<string>("gameTag") || 'ck3';
 
     try {
@@ -139,8 +139,6 @@ async function fetchLatestRelease(octokit: any): Promise<any | undefined> {
 function findPlatformAsset(assets: any[], platform: NodeJS.Platform, gameTag: string): { downloadUrl: string } | undefined {
     revealLog();
     log("Latest release assets:");
-    
-
     log(JSON.stringify(assets.filter(asset => asset.name.includes(gameTag)), null, 4));
 
     const platformName = platform === "win32" ? "windows" : "linux";
@@ -170,7 +168,7 @@ async function downloadAndExtractTiger(downloadUrl: string, platform: NodeJS.Pla
         fs.mkdirSync(context.globalStorageUri.fsPath, { recursive: true });
     }
 
-    log("Downloading tiger release from:", downloadUrl);
+    log("Downloading ck3-tiger release from:", downloadUrl);
     log("Downloading to:", tigerPath);
 
     try {

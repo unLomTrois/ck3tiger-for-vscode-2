@@ -173,7 +173,7 @@ async function handleFileChange(uri: vscode.Uri): Promise<void> {
     }
     
     fileHashes.set(filePath, currentHash);
-    await vscode.commands.executeCommand("ck3tiger-for-vscode.runCk3Tiger");
+    await vscode.commands.executeCommand("ck3tiger-for-vscode.runCk3tiger");
 }
 
 /**
