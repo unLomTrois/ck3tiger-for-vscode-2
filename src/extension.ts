@@ -5,22 +5,19 @@ import * as vscode from "vscode";
 import { initLogger, log } from "./logger";
 import { checkConfiguration } from "./config/configuration";
 import { initStatusBarButton } from "./statusBar";
-import { ContextContainer } from "./context";
 import { initFileWatcher } from "./fileWatcher/fileWatcher";
 import * as commands from "./commands";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext) {
-    ContextContainer.context = context;
-
     const registerCommand = commands.createRegisterCommand(context);
 
     initLogger();
 
     log("Initializing ck3tiger extension");
 
-    await checkConfiguration();
+    await checkConfiguration(context);
 
     initStatusBarButton(context);
 
