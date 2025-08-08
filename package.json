@@ -83,13 +83,13 @@
                     "description": "The location of a vanilla CK3 installation (like \"C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings III/game\""
                 },
                 "ck3tiger.modPath": {
-                    "scope": "application",
+                    "scope": "workspace",
                     "type": "string",
                     "description": "The location of your .mod file (like \"Like Documents/Paradox Interactive/Crusader Kings III/mod/<.mod file>\""
                 },
                 "ck3tiger.minConfidence": {
                     "title": "Minimum confidence level",
-                    "scope": "application",
+                    "scope": "workspace",
                     "type": "string",
                     "enum": [
                         "weak",
@@ -106,14 +106,14 @@
                 },
                 "ck3tiger.experimental.runOnSave": {
                     "title": "Run ck3tiger on file save",
-                    "scope": "application",
+                    "scope": "workspace",
                     "type": "boolean",
                     "default": false,
                     "markdownDescription": "When enabled, automatically runs ck3tiger validation when a file is saved within the mod directory."
                 },
                 "ck3tiger.experimental.patterns": {
                     "title": "File patterns to detect changes",
-                    "scope": "application",
+                    "scope": "workspace",
                     "type": "string",
                     "default": "**/*.{txt,yml}",
                     "markdownDescription": "A glob pattern for files to run ck3tiger on when a file is saved within the mod directory."
