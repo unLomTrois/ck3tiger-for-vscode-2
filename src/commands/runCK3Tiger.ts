@@ -36,7 +36,7 @@ async function executeValidationWithProgress(
     const tigerLogPath = getTigerLogPath(tigerPath);
 
     progress.report({ message: `Running ck3tiger` });
-    const command = `"${tigerPath}" --ck3 "${ck3Path}" --json "${modPath}" > "${tigerLogPath}"`;
+    const command = `"${tigerPath}" --game "${ck3Path}" --json "${modPath}" > "${tigerLogPath}"`;
 
     log(`Running ck3tiger:\n> ${command}\n`);
     await executeCommandAsChildProcess(command);

@@ -32,7 +32,7 @@ export async function ensureModPath(
  */
 async function promptForModPath(): Promise<string | undefined> {
     const userSelection = await vscode.window.showInformationMessage(
-        "🐯 Let's find your mod file",
+        "🐯 Let's find your mod file (CK3/Imperator) or root folder (Vic3)",
         "Open",
         "Cancel"
     );
@@ -45,16 +45,18 @@ async function promptForModPath(): Promise<string | undefined> {
 }
 
 /**
- * Open a dialog for selecting the CK3 folder path.
+ * Open a dialog for selecting the mod folder path.
  * @returns {Promise<string | undefined>} The selected folder path, or undefined if none is selected.
  */
 async function selectModPath(): Promise<string | undefined> {
+    const config = vscode.workspace.getConfiguration("ck3tiger");
+    const gameTag = config.get<string>("gameTag") || 'ck3';
     const folderUri = await vscode.window.showOpenDialog({
-        canSelectFiles: true,
-        canSelectFolders: false,
+        canSelectFiles: gameTag !== 'vic3',
+        canSelectFolders: gameTag === 'vic3',
         canSelectMany: false,
-        openLabel: "Select your .mod file",
-        title: "Select your .mod file",
+        openLabel: "Select .mod file (CK3/Imperator) or mod root dir (Vic3)",
+        title: "Select .mod file (CK3/Imperator) or mod root dir (Vic3)",
         // todo: add a default path to documents/pdx/ck3/mod/ or /home/.local/share/pdx/ck3/mod/
     });
 
@@ -71,7 +73,7 @@ function getSelectedPath(
 ): string | undefined {
     const path = folderUri?.[0]?.fsPath;
     if (path) {
-        log("ck3path selected: " + path);
+        log("mod path selected: " + path);
     }
     return path;
 }
@@ -95,7 +97,7 @@ async function updateModPath(
     } catch (error: any) {
         log(`Failed to update ck3tiger.modPath: ${error.message || error}`);
         vscode.window.showErrorMessage(
-            "Failed to update ck3tiger.modPath. Please manually set the ck3path in the extension settings or try again."
+            "Failed to update ck3tiger.modPath. Please manually set the mod path in the extension settings or try again."
         );
     }
 }
