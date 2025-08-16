@@ -1,6 +1,8 @@
 import * as vscode from "vscode";
 import { log } from "../logger";
-import { downloadTiger } from "../utils/downloadTiger";
+import { downloadTiger } from "../tiger/download";
+import * as fs from "fs";
+import * as path from "path";
 
 /**
  * Ensure that the CK3-Tiger path is properly configured.
@@ -109,4 +111,24 @@ async function updateTigerPath(
             "Failed to update ck3tiger.tigerPath. Please manually set the ck3path in the extension settings or try again."
         );
     }
+}
+
+export async function ensureTigerDir(): Promise<string> {
+    const context = (await vscode.commands.executeCommand(
+        "getContext"
+    )) as vscode.ExtensionContext;
+
+    // Ensure the global storage directory exists
+    const globalStoragePath = context.globalStorageUri.fsPath;
+    if (!fs.existsSync(globalStoragePath)) {
+        fs.mkdirSync(globalStoragePath, { recursive: true });
+    }
+
+    const tigerPath = path.join(globalStoragePath, "ck3-tiger");
+    if (!fs.existsSync(tigerPath)) {
+        fs.mkdirSync(tigerPath, { recursive: true });
+        log(`Created directory: ${tigerPath}`);
+    }
+
+    return tigerPath;
 }

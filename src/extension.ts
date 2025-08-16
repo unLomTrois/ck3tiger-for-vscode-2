@@ -5,7 +5,7 @@ import * as vscode from "vscode";
 
 import { initLogger, log } from "./logger";
 import { checkConfiguration } from "./config/configuration";
-import { initStatusBarButton } from "./statusBar";
+import { initStatusBarButton } from "./ui/statusBar";
 import { initFileWatcher } from "./fileWatcher/fileWatcher";
 import * as commands from "./commands";
 

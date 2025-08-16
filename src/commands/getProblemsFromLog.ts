@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { getPaths } from "../config/configuration";
 import { generateDiagnostics } from "../diagnostics";
 import { log } from "../logger";
-import { getTigerLogPath, parseTigerLogFile } from "../utils/tigerLog";
+import { getTigerLogPath, parseTigerLogFile } from "../tiger/parser";
 
 export function getProblemsFromLog() {
     vscode.window.withProgress(
