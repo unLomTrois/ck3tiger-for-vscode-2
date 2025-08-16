@@ -5,7 +5,6 @@ import fs from "fs";
 import path from "path";
 import { downloadFile } from "./downloadFile";
 import { exec, ExecOptions } from "child_process";
-import { Octokit } from "@octokit/core";
 
 /**
  * Download the latest version of ck3-tiger from GitHub.
@@ -14,6 +13,7 @@ import { Octokit } from "@octokit/core";
 export async function downloadTiger(): Promise<string | undefined> {
     revealLog();
     const platform = os.platform();
+    let archivePath: string | undefined;
 
     try {
         const latestRelease = await fetchLatestRelease();
@@ -28,15 +28,32 @@ export async function downloadTiger(): Promise<string | undefined> {
         }
 
         const tigerPath = await ensureTigerPath();
+        const fileExtension = path.extname(downloadUrl);
+        const fileName = fileExtension === ".zip" ? "tiger.zip" : "tiger.tar.gz";
+        archivePath = path.join(tigerPath, fileName);
 
-        const data = await downloadAndExtractTiger(downloadUrl, platform, tigerPath);
+        await downloadFile(downloadUrl, archivePath).then(() => {
+            log(`File downloaded as ${fileName}.`);
+        });
 
-        return data;
+        await platformSpecificExtractArchive(archivePath, tigerPath, platform).then(() => {
+            log("File extracted successfully.");
+        });
+
+        const executableFile = platform === "win32" ? "ck3-tiger.exe" : "ck3-tiger";
+        const executablePath = path.join(tigerPath, executableFile);
+
+        return executablePath;
     } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         log(`Error downloading tiger: ${errorMessage}`);
         vscode.window.showErrorMessage(`Failed to download ck3-tiger: ${errorMessage}`);
         return undefined;
+    } finally {
+        if (archivePath && fs.existsSync(archivePath)) {
+            await fs.promises.unlink(archivePath);
+            log("Archive file deleted successfully.");
+        }
     }
 }
 
@@ -45,6 +62,8 @@ export async function downloadTiger(): Promise<string | undefined> {
  * @returns {Promise<any | undefined>} The latest release data or undefined if fetching failed.
  */
 async function fetchLatestRelease(): Promise<any | undefined> {
+    const { Octokit } = await import("@octokit/core");
+
     try {
         const octokit = new Octokit();
         const response = await octokit.request("GET /repos/{owner}/{repo}/releases/latest", {
@@ -91,7 +110,7 @@ async function ensureTigerPath(): Promise<string> {
     if (!fs.existsSync(globalStoragePath)) {
         fs.mkdirSync(globalStoragePath, { recursive: true });
     }
-    
+
     const tigerPath = path.join(globalStoragePath, "ck3-tiger");
     if (!fs.existsSync(tigerPath)) {
         fs.mkdirSync(tigerPath, { recursive: true });
@@ -101,49 +120,11 @@ async function ensureTigerPath(): Promise<string> {
     return tigerPath;
 }
 
-/**
- * Download and extract the tiger binary.
- * @param {string} downloadUrl - The URL to download from.
- * @param {NodeJS.Platform} platform - The current platform.
- * @returns {Promise<string | undefined>} The path to the extracted executable.
- */
-export async function downloadAndExtractTiger(
-    downloadUrl: string,
+async function platformSpecificExtractArchive(
+    archivePath: string,
+    destDir: string,
     platform: NodeJS.Platform,
-    tigerPath: string,
-): Promise<string | undefined> {
-    log("Downloading ck3-tiger release from:", downloadUrl);
-    log("Downloading to:", tigerPath);
-
-    try {
-        const fileExtension = path.extname(downloadUrl);
-        const fileName = fileExtension === ".zip" ? "tiger.zip" : "tiger.tar.gz";
-        const archivePath = path.join(tigerPath, fileName);
-
-        await downloadFile(downloadUrl, archivePath);
-        log(`File downloaded as ${fileName}.`);
-
-        await platformSpecificExtractArchive(archivePath, tigerPath, platform).then(() => {
-            log("File extracted successfully.");
-        }).catch((err) => {
-            log("Error extracting file:", err);
-        }).finally(() => {
-            return fs.promises.unlink(archivePath).then(() => {
-                log("Archive file deleted successfully.");
-            });
-        });
-
-        const executableFile = platform === "win32" ? "ck3-tiger.exe" : "ck3-tiger";
-
-        return path.join(tigerPath, executableFile);
-    } catch (error: unknown) {
-        const errorMessage = error instanceof Error ? error.message : String(error);
-        log(`Error during download and extraction: ${errorMessage}`);
-        return undefined;
-    }
-}
-
-async function platformSpecificExtractArchive(archivePath: string, destDir: string, platform: NodeJS.Platform): Promise<{
+): Promise<{
     stdout: string;
     stderr: string;
 }> {
