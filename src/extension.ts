@@ -1,5 +1,6 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
+import * as os from "os";
 import * as vscode from "vscode";
 
 import { initLogger, log } from "./logger";
@@ -11,13 +12,21 @@ import * as commands from "./commands";
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext) {
+    const platform = os.platform();
+    const supportedPlatforms: NodeJS.Platform[] = ["win32", "linux"];
+    if (!supportedPlatforms.includes(platform)) {
+        vscode.window.showErrorMessage(`Unfortunately, your platform (${platform}) is not supported. Supported platforms are: ${supportedPlatforms.join(", ")}`);
+        return undefined;
+    }
+
     const registerCommand = commands.createRegisterCommand(context);
 
     initLogger();
 
     log("Initializing ck3tiger extension");
+    context.subscriptions.push(vscode.commands.registerCommand('getContext', () => context));
 
-    await checkConfiguration(context);
+    await checkConfiguration();
 
     initStatusBarButton(context);
 

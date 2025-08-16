@@ -1,41 +1,12 @@
 import https from "https";
 import fs from "fs";
 import { URL } from "url";
-import path from "path";
-import { exec } from "child_process";
-import { promisify } from "util";
 import { log } from "../logger";
 
-const execPromise = promisify(exec);
-
-export async function downloadAndExtract(
-    fileUrl: string,
-    destDir: string
-): Promise<void> {
-    const fileExtension = path.extname(fileUrl);
-    const fileName =
-        fileExtension === ".zip" ? "downloaded.zip" : "downloaded.tar.gz";
-    const archivePath = path.join(destDir, fileName);
-
-    await ensureDirectoryExists(destDir);
-    await downloadFile(fileUrl, archivePath);
-    log(`File downloaded as ${fileName}.`);
-
-    await extractArchive(archivePath, destDir);
-    log("File extracted successfully.");
-
-    await deleteFile(archivePath);
-    log("Archive file deleted successfully.");
-}
-
-async function ensureDirectoryExists(dir: string): Promise<void> {
-    if (!fs.existsSync(dir)) {
-        await fs.promises.mkdir(dir, { recursive: true });
-        log(`Created directory: ${dir}`);
-    }
-}
-
-async function downloadFile(fileUrl: string, dest: string): Promise<void> {
+/**
+ * Custom wrapper to download files and track progress.
+ */
+export async function downloadFile(fileUrl: string, dest: string): Promise<void> {
     const myURL = new URL(fileUrl);
 
     const options = {
@@ -133,29 +104,4 @@ async function downloadFile(fileUrl: string, dest: string): Promise<void> {
             reject(err);
         });
     });
-}
-
-async function extractArchive(
-    archivePath: string,
-    destDir: string
-): Promise<void> {
-    const extension = path.extname(archivePath);
-
-    try {
-        if (extension === ".zip") {
-            // Extract zip file
-            await execPromise(`tar -xf "${archivePath}" -C "${destDir}"`);
-        } else if (extension === ".gz" || extension === ".tar.gz") {
-            // Extract tar.gz file
-            await execPromise(`tar -xzf "${archivePath}" -C "${destDir}"`);
-        } else {
-            throw new Error("Unsupported file extension for extraction");
-        }
-    } catch (err) {
-        throw new Error(`Extraction failed: ${(err as Error).message}`);
-    }
-}
-
-async function deleteFile(filePath: string): Promise<void> {
-    return fs.promises.unlink(filePath);
 }
