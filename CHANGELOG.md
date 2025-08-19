@@ -6,6 +6,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [1.1.4] - 2025-08-19
+
+### QoL improvements
+- Change Settings' scope to be workspace 
+
+Thanks to https://github.com/Levalicious
+
 ## [1.1.3] - 2025-08-17
 
 - Refactored tiger archive download process 
