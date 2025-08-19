@@ -6,7 +6,11 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
-## [1.1.2] - 2024-05-13
+## [1.1.3] - 2025-08-17
+
+- Refactored tiger archive download process 
+
+## [1.1.2] - 2025-05-13
 
 ### Improved
 - Enhanced reliability of the tiger update process
