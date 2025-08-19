@@ -2,18 +2,19 @@ import * as vscode from "vscode";
 import { LogLevel } from "vscode";
 
 let logger: vscode.OutputChannel;
+const logLevel: LogLevel = LogLevel.Debug;
 
 export function initLogger() {
     logger = vscode.window.createOutputChannel("ck3tiger-for-vscode");
+    log("Initializing ck3tiger extension");
 }
-const level: LogLevel = LogLevel.Debug;
 
 export function log(...values: unknown[]) {
     logger.appendLine(values.join(" "));
 }
 
 export function logDebug(...values: unknown[]) {
-    if (level > LogLevel.Debug) {
+    if (logLevel > LogLevel.Debug) {
         return;
     }
 
